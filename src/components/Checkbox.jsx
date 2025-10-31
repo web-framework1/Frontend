@@ -1,5 +1,4 @@
-// src/components/Checkbox.jsx
-import React from "react"; // useState import 제거
+import React from "react";
 
 /**
  * @param {string} label - 체크박스 옆에 표시될 텍스트 (페이지에서 전달받음)
@@ -8,8 +7,6 @@ import React from "react"; // useState import 제거
  */
 const Checkbox = ({ label, checked, onChange }) => {
   return (
-    // '전체를 <label> 태그로 감싸서, 텍스트를 클릭해도 체크박스가 선택되도록 합니다.'
-    // ⬆️ 위 주석을 JSX 주석으로 변경했습니다.
     <label className="flex items-center gap-2 cursor-pointer">
       {/* 1. 체크박스 버튼 (작동하는 부분) */}
       <input
