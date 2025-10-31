@@ -46,13 +46,14 @@ function NavigationBar() {
           </ul>
         </nav>
         <CustomButton
-          text="내 주변 수거함 찾기"
           type="button"
           color="gradient"
           onClick={() => {
             navigate("/about");
           }}
-        />
+        >
+          내 주변 수거함 찾기
+        </CustomButton>
       </div>
     </>
   );

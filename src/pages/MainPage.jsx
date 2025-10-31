@@ -5,9 +5,11 @@ import { useState } from "react";
 import { Card } from "@components/common/card/card";
 import BannerSlider from "@components/common/slider/banner-slider";
 import CustomButton from "@components/common/button/custom-button";
+import Footer from "../components/common/footer/footer";
+import Checkbox from "../components/common/checkbox/Checkbox";
 
 function MainPage() {
-  const [q, setQ] = useState("");
+  const [q1, setQ] = useState("");
 
   return (
     <>
@@ -28,20 +30,25 @@ function MainPage() {
             <Card className="min-h-32 shadow-lg border-black/5 bg-white">
               hello
               <SearchInput
-                value={q}
+                value={q1}
                 onChange={(e) => setQ(e.target.value)}
                 onSearch={(val) => alert(val)}
               />
             </Card>
             <Card className="min-h-32 shadow-lg border-black/5">
               hello
-              <CustomButton text="hello" color="red" />
+              <CustomButton text="hello" color="red">
+                안녕
+              </CustomButton>
               <CustomButton text="world" color="blue" />
               <br />
               hello
             </Card>
           </section>
+
+          <Checkbox label="주의사항" />
         </main>
+        <Footer />
       </div>
     </>
   );

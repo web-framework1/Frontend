@@ -14,7 +14,12 @@ const COLORS = {
     hover:bg-gradient-to-r",
 };
 
-const CustomButton = ({ text, onClick, type = "button", color = "green" }) => {
+const CustomButton = ({
+  children,
+  onClick,
+  type = "button",
+  color = "green",
+}) => {
   const colorClass = COLORS[color] || COLORS.green;
 
   return (
@@ -32,7 +37,7 @@ const CustomButton = ({ text, onClick, type = "button", color = "green" }) => {
       aria-invalid:border-destructive h-9 px-4 py-2 has-[>svg]:px-3 ${colorClass} 
       text-white font-bold rounded-lg`}
     >
-      {text}
+      {children}
     </button>
   );
 };

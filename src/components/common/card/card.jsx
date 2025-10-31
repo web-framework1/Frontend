@@ -1,6 +1,7 @@
 import React from "react";
 import { cn } from "@utils/functions/utils";
 
+// 수정 필요
 function Card({ className, ...props }) {
   return (
     <div
