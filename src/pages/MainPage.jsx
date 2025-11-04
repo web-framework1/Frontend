@@ -5,8 +5,9 @@ import { useState } from "react";
 import { Card } from "@components/common/card/card";
 import BannerSlider from "@components/common/slider/banner-slider";
 import CustomButton from "@components/common/button/custom-button";
-import Footer from "../components/common/footer/footer";
-import Checkbox from "../components/common/checkbox/Checkbox";
+import Footer from "@components/common/footer/footer";
+import Checkbox from "@components/common/checkbox/Checkbox";
+import Middle from "@components/common/middle/Middle";
 
 function MainPage() {
   const [q1, setQ] = useState("");
@@ -21,12 +22,10 @@ function MainPage() {
         <main className="max-w-6xl mx-auto px-7 py-7">
           {/* 베너 슬라이더 */}
           <BannerSlider />
+          <Middle />
+          <br></br>
           {/* 카드 영역 */}
-          <section
-            className="
-          grid grid-cols-2
-          gap-5 mb-5"
-          >
+          <section className="grid grid-cols-2 gap-5 mb-5">
             <Card className="min-h-32 shadow-lg border-black/5 bg-white">
               hello
               <SearchInput
