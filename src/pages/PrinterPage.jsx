@@ -1,9 +1,13 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef } from "react";
 import { NavigationBar } from "@components/common/bar/navigation-bar";
-import Footer from "../components/common/footer/footer";
-import envelopePng from "@assets/envelope.jpg";
+import Footer from "@components/common/footer/footer";
+import Checkbox from "@components/common/checkbox/Checkbox";
 
-export default function PrinterPage({ imgSrc = envelopePng, onPrint }) {
+import envelopeImg from "@assets/envelope.jpg";
+import { useReactToPrint } from "react-to-print";
+
+export default function PrinterPage({ imgSrc = envelopeImg, featNum = 3 }) {
+  // 주의사항
   const items = useMemo(
     () => [
       "안심봉투를 이용하면 우체통을 통해 폐의약품을 반납할 수 있습니다.",
@@ -14,19 +18,32 @@ export default function PrinterPage({ imgSrc = envelopePng, onPrint }) {
     ],
     []
   );
-
   const [checks, setChecks] = useState(Array(items.length).fill(false));
   const allChecked = checks.every(Boolean);
 
+  //체크박스 토글
   const handleToggle = (idx) => {
     setChecks((prev) => prev.map((v, i) => (i === idx ? !v : v)));
   };
 
-  const handlePrint = () => {
-    if (!allChecked) return;
-    if (onPrint) onPrint();
-    else window.print();
-  };
+  const printRef = useRef();
+  // oncClick 이벤트 함수(버튼클릭시 프린터)
+  const handlelPrint = useReactToPrint({
+    documentTitle: "안심봉투",
+    contentRef: printRef,
+    pageStyle: `
+       @page { size: A4 landscape; margin: 0; }
+       @media print {
+        /* 봉투 출력 사이즈 설정 */
+        #a4-wrapper img {
+        width: 75%;
+        height: 75%;
+        object-fit: contain !important;
+        object-position: center !important;
+        page-break-inside: avoid;
+      }
+      `,
+  });
 
   return (
     <div className="min-h-screen bg-green-50">
@@ -40,7 +57,7 @@ export default function PrinterPage({ imgSrc = envelopePng, onPrint }) {
       <main className="mx-auto max-w-5xl px-4 py-6">
         <div className="mb-4 flex items-center gap-2">
           <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold">
-            5
+            {featNum}
           </span>
           <h2 className="text-lg font-bold text-gray-900">
             페이약품 안심봉투 출력
@@ -69,12 +86,12 @@ export default function PrinterPage({ imgSrc = envelopePng, onPrint }) {
           {/* 이미지 영역 */}
           <div className="px-6 pb-6">
             <div className="relative rounded-xl border border-dashed border-emerald-200 bg-emerald-50/40 p-4">
-              <div className="relative mx-auto flex items-center justify-center rounded-lg bg-white/80 p-4">
-                <img
-                  src={imgSrc}
-                  alt="안심봉투 미리보기"
-                  className="max-h-[520px] w-auto object-contain select-none"
-                />
+              <div
+                id="a4-wrapper"
+                className="relative mx-auto flex items-center justify-center rounded-lg bg-white/80"
+                ref={printRef}
+              >
+                <img src={imgSrc} alt="안심봉투" />
               </div>
               <p className="mt-2 text-center text-[11px] text-gray-500">
                 실제 프린트 여백은 인쇄 시 여백 0~5mm 기준으로 설정됩니다.
@@ -91,8 +108,7 @@ export default function PrinterPage({ imgSrc = envelopePng, onPrint }) {
               {items.map((label, i) => (
                 <li key={i}>
                   <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-gray-200 bg-white px-3 py-2.5 hover:bg-gray-50">
-                    <input
-                      type="checkbox"
+                    <Checkbox
                       className="mt-0.5 h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
                       checked={checks[i]}
                       onChange={() => handleToggle(i)}
@@ -116,7 +132,7 @@ export default function PrinterPage({ imgSrc = envelopePng, onPrint }) {
               </p>
               <button
                 type="button"
-                onClick={handlePrint}
+                onClick={handlelPrint}
                 disabled={!allChecked}
                 aria-disabled={!allChecked}
                 className={`inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold shadow-sm
