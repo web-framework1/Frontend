@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import AboutPage from "@pages/AboutPage";
 import React from "react";
 import MainPage from "@pages/MainPage";
+import SearchAiPage from "@pages/SearchAiPage";
 import PrinterPage from "@pages/PrinterPage";
 
 function App() {
@@ -10,6 +11,7 @@ function App() {
     <Routes>
       <Route path={routes.about} element={<AboutPage />}></Route>
       <Route path={routes.home} element={<MainPage />}></Route>
+      <Route path={routes.searchAi} element={<SearchAiPage />}></Route>
       <Route path={routes.printer} element={<PrinterPage />}></Route>
     </Routes>
   );

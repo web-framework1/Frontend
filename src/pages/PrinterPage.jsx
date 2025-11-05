@@ -4,7 +4,7 @@ import Footer from "@components/common/footer/footer";
 import Checkbox from "@components/common/checkbox/Checkbox";
 
 import envelopeImg from "@assets/envelope.jpg";
-import { useReactToPrint } from "react-to-print";
+import { useReactToPrint } from "react-to-print"; //프린터 라이브러리
 
 export default function PrinterPage({ imgSrc = envelopeImg, featNum = 3 }) {
   // 주의사항

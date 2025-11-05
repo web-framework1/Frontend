@@ -35,7 +35,7 @@ function MainPage() {
             <Card
               className="min-h-50 shadow-lg hover:bg-gray-100 border-black/5 bg-white"
               onClick={() => {
-                navigate(routes.about);
+                navigate(routes.searchAi);
               }}
             >
               AI 약검색
