@@ -1,18 +1,18 @@
 import React from "react";
 import { cn } from "@utils/functions/utils";
 
-// 수정 필요
-function Card({ className, ...props }) {
+function Card({ title, children, className }) {
   return (
     <div
-      data-slot="card"
       className={cn(
-        "bg-card text-card-foreground flex flex-col gap-6 rounded-xl border",
+        "bg-white rounded-lg shadow-md border border-gray-100 p-5",
         className
       )}
-      {...props}
-    />
+    >
+      <h3 className="text-lg font-bold text-gray-800 mb-3">{title}</h3>
+      <div className="text-sm text-gray-600">{children}</div>
+    </div>
   );
 }
 
-export { Card };
+export default Card;
