@@ -29,7 +29,7 @@ function NavigationBar() {
         <nav>
           <ul className="flex gap-5 list-none items-center">
             <li>
-              <NavigationItem text="지도" url="/about" />
+              <NavigationItem text="지도" url="/map" />
             </li>
             <li>
               <NavigationItem text="안심 봉투" url="/about" />
@@ -49,7 +49,7 @@ function NavigationBar() {
           type="button"
           color="gradient"
           onClick={() => {
-            navigate("/about");
+            navigate("/map");
           }}
         >
           내 주변 수거함 찾기
