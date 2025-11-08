@@ -2,7 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { NavigationBar } from "@components/common/bar/navigation-bar";
 import SearchInput from "@components/common/input/search-input";
-import Card from "@components/common/card/card";
+import Card from "@components/common/card/Card";
 import BannerSlider from "@components/common/slider/banner-slider";
 import CustomButton from "@components/common/button/custom-button";
 import Footer from "@components/common/footer/footer";
