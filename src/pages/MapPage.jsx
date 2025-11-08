@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "@components/common/bar/logo";
 import SearchInput from "@components/common/input/search-input";
 import CustomButton from "@components/common/button/custom-button";
@@ -64,7 +64,11 @@ const MapPageHeader = () => {
 // 지도 페이지
 
 function MapPage() {
-  const [query, setQuery] = useState("");
+  const location = useLocation();
+  // main페이지에서 입력한 검색 쿼리가 있을 경우 받아옴
+  const locationQuery = location.state?.locationQuery || "";
+
+  const [query, setQuery] = useState(locationQuery);
   const [results, setResults] = useState([]);
 
   const handleSearch = () => {
