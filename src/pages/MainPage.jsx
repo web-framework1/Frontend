@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationBar } from "@components/common/bar/navigation-bar";
 import { useNavigate } from "react-router-dom";
 import routes from "@utils/constants/routes";
-import Card from "@components/common/card/card";
+import Card from "@components/common/card/Card";
 import BannerSlider from "@components/common/slider/banner-slider";
 import CustomButton from "@components/common/button/custom-button";
 import Footer from "@components/common/footer/footer";
