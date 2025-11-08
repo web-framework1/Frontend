@@ -3,6 +3,7 @@ const routes = {
   about: "/about",
   printer: "/printer",
   searchAi: "/searchAi",
+  quiz: "/quiz",
 };
 
 export default routes;

@@ -39,7 +39,7 @@ function NavigationBar() {
               <NavigationItem text="AI약품검색" url={routes.searchAi} />
             </li>
             <li>
-              <NavigationItem text="퀴즈" url="/about" />
+              <NavigationItem text="퀴즈" url="/quiz" />
             </li>
             <li>
               <NavigationItem text="게시판" url="/about" />
