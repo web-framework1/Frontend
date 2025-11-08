@@ -13,7 +13,7 @@ function MainPage() {
 
   return (
     <>
-      <div className=" min-h-screen justify-center bg-green-50">
+      <div className=" min-h-screen flex flex-col bg-green-50">
         <header className="sticky top-0 z-30 backdrop-blur-sm bg-white/90 border-b border-black/5">
           <NavigationBar />
         </header>
