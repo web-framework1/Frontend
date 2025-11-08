@@ -1,14 +1,16 @@
-import "./global.css";
-import { StrictMode } from "react";
+// src/main.jsx
 import React from "react";
-import { createRoot } from "react-dom/client";
-import App from "./App.jsx";
+import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import App from "./App.jsx";
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
+// 👇 이 줄이 있는지 확인!
+import "./global.css";
+
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <React.StrictMode>
     <BrowserRouter>
       <App />
     </BrowserRouter>
-  </StrictMode>
+  </React.StrictMode>
 );
