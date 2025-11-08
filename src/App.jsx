@@ -1,13 +1,15 @@
 // src/App.jsx
-import React from "react"; // useState는 지금 안 쓰지만 일단 둡니다.
+import React from "react";
 import { Routes, Route } from "react-router-dom";
 
-// --- 올바른 경로에서 컴포넌트 Import ---
+// 공통 컴포넌트
 import Header from "./components/common/bar/Header.jsx";
 import Footer from "./components/common/footer/Footer.jsx";
+
+// 페이지 컴포넌트
 import MainPage from "./pages/MainPage.jsx";
-// import AboutPage from './pages/AboutPage.jsx';
-// import BoardPage from './pages/BoardPage.jsx';
+import MapPage from "./pages/MapPage.jsx";
+// import BoardPage from './pages/BoardPage.jsx'; // (게시판 페이지가 있다면 import)
 
 function App() {
   // NavBar에 전달할 메뉴 목록
@@ -24,9 +26,10 @@ function App() {
       <main className="flex-grow">
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/map" element={<MapPage />} />
 
           {/* <Route path="/board" element={<BoardPage />} /> */}
-          {/* <Route path="/about" element={<AboutPage />} /> */}
+          {/* <Route path="/search" element={...} /> */}
         </Routes>
       </main>
 
@@ -35,4 +38,4 @@ function App() {
   );
 }
 
-export default App; // 👈 이 줄이 빠져있었습니다.
+export default App;

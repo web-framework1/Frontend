@@ -1,23 +1,30 @@
 // src/pages/MainPage.jsx
 import React from "react";
-import { Link } from "react-router-dom"; // 👈 게시판 카드에 필요해서 추가
+import { Link, useNavigate } from "react-router-dom"; // Link와 useNavigate import
 import Card from "../components/common/card/Card.jsx";
 import BasicButton from "../components/common/button/BasicButton.jsx";
-// import TextInput from "../components/common/input/TextInput.jsx"; // 👈 오류가 나니 일단 주석 처리
+// import TextInput from "../components/common/input/TextInput.jsx"; // (이 파일이 오류 없이 작동한다면 이것을 사용)
 
-// 👈 오류를 피하기 위해 간단한 TextInput을 여기에 임시로 만듭니다.
-const SimpleTextInput = ({ placeholder, className }) => (
+// (TextInput이 오류날 경우를 대비한 임시 인풋 컴포넌트)
+const SimpleTextInput = ({ placeholder, className, ...props }) => (
   <input
     type="text"
     placeholder={placeholder}
     className={`w-full px-3 py-2 border border-gray-300 rounded-lg ${
       className || ""
     }`}
+    {...props}
   />
 );
 
-// 디자인 시안의 메인 페이지입니다.
 function MainPage() {
+  const navigate = useNavigate(); // 페이지 이동을 위한 훅
+
+  // /map 페이지로 이동하는 함수
+  const goToMapPage = () => {
+    navigate("/map");
+  };
+
   return (
     <div className="flex w-full flex-col items-center">
       {/* 2. 메인 배너 (Hero Section) */}
@@ -43,7 +50,9 @@ function MainPage() {
             </p>
             <div className="mt-4 flex gap-4">
               <span className="h-10 w-32">
-                <BasicButton variant="black">지도 검색</BasicButton>
+                <BasicButton variant="black" onClick={goToMapPage}>
+                  지도 검색
+                </BasicButton>
               </span>
               <span className="h-10 w-32">
                 <BasicButton variant="white">자료 검색</BasicButton>
@@ -59,7 +68,9 @@ function MainPage() {
             </p>
             <div className="mt-4 flex gap-4">
               <span className="h-10 w-32">
-                <BasicButton variant="black">지도 바로가기</BasicButton>
+                <BasicButton variant="black" onClick={goToMapPage}>
+                  지도 바로가기
+                </BasicButton>
               </span>
               <span className="h-10 w-32">
                 <BasicButton variant="white">퀴즈 풀기</BasicButton>
@@ -71,30 +82,49 @@ function MainPage() {
 
       {/* 4. 기능 카드 섹션 (총 6개) */}
       <section className="grid w-full max-w-6xl grid-cols-1 gap-6 p-8 sm:grid-cols-2 lg:grid-cols-3">
-        {/* 카드 1: 지도 검색 및 길찾기 */}
-        <Card className="h-60">
-          <h3 className="text-xl font-bold">지도 검색 및 길찾기</h3>
-          <p className="mt-2">
-            주소 입력으로 내 주변 약국, 보건소를 확인하고 길찾기까지 한번에 이용
-            가능합니다.
-          </p>
-        </Card>
+        {/* 카드 1: [수정] 카드 자체를 클릭해도 지도로 이동하도록 Link로 감싸기 */}
+        <Link to="/map">
+          <Card className="h-60 hover:shadow-xl transition-shadow">
+            <h3 className="text-xl font-bold">지도 검색 및 길찾기</h3>
+            <p className="mt-2">
+              주소 입력으로 내 주변 약국, 보건소를 확인하고 길찾기까지 한번에
+              이용 가능합니다.
+            </p>
+          </Card>
+        </Link>
 
         {/* 카드 2: 환경 영향 시각화 */}
         <Card className="h-60">
           <h3 className="text-xl font-bold">환경 영향 시각화</h3>
           <p className="mt-2">
-            폐의약품이 환경에 미치는 영향을 그래프와 차트로 쉽게 확인해보세요.
+            회수량에 따라 물양-하천 보호 효과를 그래프와 색상으로 직관화합니다.
           </p>
+          <div className="mt-4 flex justify-around gap-2">
+            <div className="flex flex-col items-center">
+              <div className="h-16 w-12 rounded-lg bg-green-600 opacity-70"></div>
+              <p className="mt-1 text-sm">물 보호</p>
+              <p className="text-xs text-gray-500">70%</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="h-12 w-12 rounded-lg bg-green-600 opacity-55"></div>
+              <p className="mt-1 text-sm">하천 보호</p>
+              <p className="text-xs text-gray-500">55%</p>
+            </div>
+            <div className="flex flex-col items-center">
+              <div className="h-20 w-12 rounded-lg bg-green-600 opacity-85"></div>
+              <p className="mt-1 text-sm">토양 보호</p>
+              <p className="text-xs text-gray-500">85%</p>
+            </div>
+          </div>
         </Card>
 
         {/* 카드 3: 제품명 검색 */}
         <Card className="h-60">
           <h3 className="text-xl font-bold">제품명 검색</h3>
           <p className="mt-2">
-            폐기하려는 의약품을 검색하고 올바른 폐기 방법을 확인하세요.
+            제품명을 입력하면 폐약품 여부를 안내합니다. 헷갈리는 제품은
+            아이콘-색상으로 강조됩니다.
           </p>
-          {/* 👈 SimpleTextInput을 사용합니다. */}
           <div className="mt-4 flex gap-2">
             <SimpleTextInput
               placeholder="제품명 (예: 타이레놀)"
@@ -104,20 +134,18 @@ function MainPage() {
           </div>
         </Card>
 
-        {/* --- 새로 추가되는 카드들 --- */}
-
         {/* 새 카드 4: 게시판 / 이벤트 */}
         <Card className="h-60">
           <h3 className="text-xl font-bold">게시판 / 이벤트</h3>
           <p className="mt-2">수거 행사, 공지, 교육 자료 등을 확인하세요.</p>
           <ul className="mt-4 text-sm text-blue-700">
             <li>
-              <Link to="/board/notice/1" className="hover:underline">
+              <Link to="/board" className="hover:underline">
                 [10/10] 전국 수거 캠페인 시작
               </Link>
             </li>
             <li>
-              <Link to="/board/notice/2" className="hover:underline">
+              <Link to="/board" className="hover:underline">
                 [09/25] 교육 자료 업로드
               </Link>
             </li>
