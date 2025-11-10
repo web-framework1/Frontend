@@ -34,10 +34,10 @@ const MapPageHeader = () => {
               <NavigationItem text="지도" url="/map" />
             </li>
             <li>
-              <NavigationItem text="안심 봉투" url="/safe-bag" />
+              <NavigationItem text="안심 봉투" url="/printer" />
             </li>
             <li>
-              <NavigationItem text="AI약품검색" url="/ai-search" />
+              <NavigationItem text="AI약품검색" url="/searchAi" />
             </li>
             <li>
               <NavigationItem text="퀴즈" url="/quiz" />
