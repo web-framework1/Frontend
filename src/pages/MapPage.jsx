@@ -14,7 +14,7 @@ function MapPage() {
 
   const [query, setQuery] = useState(locationQuery);
   const [results, setResults] = useState([]);
-
+  const [filter, setFilter] = useState("전체");
   const [searchTrigger, setSearchTrigger] = useState({
     keyword: locationQuery ? locationQuery + " 약국" : "",
     timestamp: Date.now(),
@@ -26,8 +26,17 @@ function MapPage() {
       return;
     }
 
+    let searchKeyword = query.trim();
+    if (filter === "약국") {
+      searchKeyword += " 약국";
+    } else if (filter === "보건소") {
+      searchKeyword += " 보건소";
+    } else {
+      searchKeyword += " 약국";
+    }
+
     setSearchTrigger({
-      keyword: query.trim() + " 약국",
+      keyword: searchKeyword,
       timestamp: Date.now(),
     });
   };
@@ -41,11 +50,19 @@ function MapPage() {
           alert(
             `현재 위치(위도: ${lat.toFixed(4)}, 경도: ${lng.toFixed(
               4
-            )}) 주변 약국을 검색합니다.`
+            )}) 주변을 검색합니다.`
           );
+
+          let locationKeyword = "내 위치";
+          if (filter === "약국") {
+            locationKeyword += " 약국";
+          } else if (filter === "보건소") {
+            locationKeyword += " 보건소";
+          } else locationKeyword += " 약국";
+
           setQuery("현재 위치");
           setSearchTrigger({
-            keyword: "내 위치 약국",
+            keyword: locationKeyword,
             timestamp: Date.now(),
           });
         },
@@ -80,7 +97,11 @@ function MapPage() {
             />
 
             <div className="flex gap-2">
-              <select className="flex-1 border border-gray-300 rounded-lg h-10 px-3 text-sm focus:outline-none focus:border-blue-500">
+              <select
+                className="flex-1 border border-gray-300 rounded-lg h-10 px-3 text-sm focus:outline-none focus:border-blue-500"
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+              >
                 <option>전체</option>
                 <option>약국</option>
                 <option>보건소</option>

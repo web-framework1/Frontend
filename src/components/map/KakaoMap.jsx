@@ -42,22 +42,23 @@ const KakaoMap = ({ searchTrigger, setResults }) => {
 
     const ps = new window.kakao.maps.services.Places();
 
-    if (keyword === "내 위치 약국") {
+    if (keyword.startsWith("내 위치")) {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
+            const searchTerm = keyword.replace("내 위치", "").trim();
 
             ps.keywordSearch(
-              "약국",
+              searchTerm,
               (data, status) => {
                 handleSearchResult(data, status, map);
               },
               {
                 location: new window.kakao.maps.LatLng(lat, lng),
-                radius: 5000, // 5km 반경
-                sort: window.kakao.maps.services.SortBy.DISTANCE, // 거리순 정렬
+                radius: 5000,
+                sort: window.kakao.maps.services.SortBy.DISTANCE,
               }
             );
           },
