@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
 import NavHeaderMap from "@components/common/bar/NavHeaderMap";
 import SearchInput from "@components/common/input/search-input";
 import CustomButton from "@components/common/button/custom-button";
@@ -14,24 +15,45 @@ function MapPage() {
   const locationQuery = location.state?.locationQuery || "";
 
   const [query, setQuery] = useState(locationQuery);
+  const [searchKeyword, setSearchKeyword] = useState(
+    locationQuery ? locationQuery + " 약국" : ""
+  );
   const [results, setResults] = useState([]);
 
   const handleSearch = () => {
-    console.log("검색어:", query);
-    setResults([
-      {
-        id: 1,
-        name: "행복약국",
-        address: "서울 강남구 역삼동 123",
-        hours: "09:00-18:00",
-      },
-      {
-        id: 2,
-        name: "강남보건소",
-        address: "서울 강남구 논현동 456",
-        hours: "09:00-17:00",
-      },
-    ]);
+    if (!query.trim()) {
+      alert("검색어를 입력해주세요.");
+      return;
+    }
+
+    setSearchKeyword(query.trim() + " 약국");
+    setResults([]);
+  };
+
+  const handleCurrentLocationSearch = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          alert(
+            `현재 위치(위도: ${lat.toFixed(4)}, 경도: ${lng.toFixed(
+              4
+            )}) 주변 약국을 검색합니다.`
+          );
+          setQuery("현재 위치");
+          setSearchKeyword("내 위치 약국");
+        },
+        (error) => {
+          console.error("Geolocation Error:", error);
+          alert(
+            "위치 정보를 가져오는 데 실패했습니다. 브라우저의 위치 권한을 확인해주세요."
+          );
+        }
+      );
+    } else {
+      alert("이 브라우저에서는 위치 정보(Geolocation)를 지원하지 않습니다.");
+    }
   };
 
   return (
@@ -62,9 +84,6 @@ function MapPage() {
                 <option>운영시간 전체</option>
                 <option>운영중</option>
               </select>
-              <CustomButton color="gray" onClick={() => alert("내 위치")}>
-                내 위치
-              </CustomButton>
             </div>
             <CustomButton color="gradient" onClick={handleSearch}>
               검색
@@ -74,34 +93,52 @@ function MapPage() {
             </CustomButton>
           </div>
 
-          <div className="flex-grow overflow-y-auto mt-6 space-y-4">
-            {results.map((item) => (
+          <p className="text-sm font-semibold text-gray-600 mt-6 mb-3">
+            {searchKeyword
+              ? `"${searchKeyword}" 검색 결과: ${results.length}개`
+              : "지역을 검색해주세요."}
+          </p>
+
+          <div className="flex-grow overflow-y-auto mt-2 space-y-4 pr-1">
+            {results.map((item, index) => (
               <div
-                key={item.id}
-                className="border rounded-lg p-4 hover:bg-gray-50"
+                key={item.id || index}
+                className="border rounded-lg p-4 hover:bg-green-50 cursor-pointer transition duration-150 shadow-sm"
               >
                 <h3 className="font-bold text-lg text-green-700">
-                  {item.name}
+                  {item.place_name}
                 </h3>
-                <p className="text-sm text-gray-700">{item.address}</p>
-                <p className="text-xs text-gray-500 mt-1">{item.hours}</p>
+                <p className="text-sm text-gray-700">
+                  {item.road_address_name || item.address_name}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  {item.phone || "전화번호 정보 없음"}
+                </p>
                 <div className="mt-3">
                   <CustomButton
                     color="blue"
-                    onClick={() => alert(`${item.name} 길찾기`)}
+                    onClick={() => {
+                      window.open(
+                        `https://map.kakao.com/link/to/${item.place_name},${item.y},${item.x}`,
+                        "_blank"
+                      );
+                    }}
                   >
                     길찾기
                   </CustomButton>
                 </div>
               </div>
             ))}
+            {results.length === 0 && searchKeyword && (
+              <p className="text-sm text-center text-gray-500 pt-10">
+                검색 결과가 없습니다.
+              </p>
+            )}
           </div>
         </aside>
 
         <section className="flex-grow bg-gray-200">
-          <div className="w-full h-full flex items-center justify-center text-gray-500">
-            지도 표시 영역
-          </div>
+          <KakaoMap searchKeyword={searchKeyword} setResults={setResults} />
         </section>
       </main>
 
