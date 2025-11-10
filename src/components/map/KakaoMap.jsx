@@ -68,9 +68,19 @@ const KakaoMap = ({ searchTrigger, setResults }) => {
         );
       }
     } else {
-      ps.keywordSearch(keyword, (data, status) => {
-        handleSearchResult(data, status, map);
-      });
+      const searchOptions = {
+        location: map.getCenter(),
+        radius: 10000,
+        sort: window.kakao.maps.services.SortBy.ACCURACY,
+      };
+
+      ps.keywordSearch(
+        keyword,
+        (data, status) => {
+          handleSearchResult(data, status, map);
+        },
+        searchOptions
+      );
     }
   }, [searchTrigger, map, setResults]);
 
