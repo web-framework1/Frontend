@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 
-const KakaoMap = ({ searchKeyword, setResults }) => {
+const KakaoMap = ({ searchTrigger, setResults }) => {
   const mapContainer = useRef(null);
   const [map, setMap] = useState(null);
   const [markers, setMarkers] = useState([]);
+  const [currentInfowindow, setCurrentInfowindow] = useState(null);
 
   useEffect(() => {
     if (window.kakao && window.kakao.maps) {
@@ -22,47 +23,101 @@ const KakaoMap = ({ searchKeyword, setResults }) => {
   }, []);
 
   useEffect(() => {
-    if (!map || !searchKeyword) {
+    const { keyword } = searchTrigger;
+
+    if (!map || !keyword) {
+      markers.forEach((marker) => marker.setMap(null));
+      setMarkers([]);
+      setResults([]);
       return;
+    }
+
+    markers.forEach((marker) => marker.setMap(null));
+    setMarkers([]);
+    setResults([]);
+    if (currentInfowindow) {
+      currentInfowindow.close();
+      setCurrentInfowindow(null);
     }
 
     const ps = new window.kakao.maps.services.Places();
 
-    ps.keywordSearch(searchKeyword, (data, status) => {
-      if (status === window.kakao.maps.services.Status.OK) {
-        setResults(data);
+    if (keyword === "내 위치 약국") {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
 
-        markers.forEach((marker) => marker.setMap(null));
+            ps.keywordSearch(
+              "약국",
+              (data, status) => {
+                handleSearchResult(data, status, map);
+              },
+              {
+                location: new window.kakao.maps.LatLng(lat, lng),
+                radius: 5000, // 5km 반경
+                sort: window.kakao.maps.services.SortBy.DISTANCE, // 거리순 정렬
+              }
+            );
+          },
+          () => {
+            alert("위치 정보를 가져오는 데 실패했습니다.");
+          }
+        );
+      }
+    } else {
+      ps.keywordSearch(keyword, (data, status) => {
+        handleSearchResult(data, status, map);
+      });
+    }
+  }, [searchTrigger, map, setResults]);
 
-        const newMarkers = [];
-        const bounds = new window.kakao.maps.LatLngBounds();
+  const handleSearchResult = (data, status, mapInstance) => {
+    if (status === window.kakao.maps.services.Status.OK) {
+      setResults(data);
 
-        data.forEach((place) => {
-          const marker = new window.kakao.maps.Marker({
-            map: map,
-            position: new window.kakao.maps.LatLng(place.y, place.x),
-          });
-          newMarkers.push(marker);
+      const newMarkers = [];
+      const bounds = new window.kakao.maps.LatLngBounds();
 
-          bounds.extend(new window.kakao.maps.LatLng(place.y, place.x));
+      data.forEach((place) => {
+        const markerPosition = new window.kakao.maps.LatLng(place.y, place.x);
+        const marker = new window.kakao.maps.Marker({
+          map: mapInstance,
+          position: markerPosition,
         });
 
-        setMarkers(newMarkers);
+        const infowindow = new window.kakao.maps.InfoWindow({
+          content: `<div style="padding:5px;font-size:12px;width:150px;text-overflow:ellipsis;">${place.place_name}</div>`,
+          removable: true,
+        });
 
-        map.setBounds(bounds);
-      } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
-        alert("검색 결과가 없습니다.");
-        setResults([]);
-        markers.forEach((marker) => marker.setMap(null));
-        setMarkers([]);
-      } else {
-        alert("검색 중 오류가 발생했습니다.");
-        setResults([]);
-        markers.forEach((marker) => marker.setMap(null));
-        setMarkers([]);
+        window.kakao.maps.event.addListener(marker, "click", function () {
+          if (currentInfowindow) {
+            currentInfowindow.close();
+          }
+          infowindow.open(mapInstance, marker);
+          setCurrentInfowindow(infowindow);
+          mapInstance.panTo(markerPosition);
+        });
+
+        newMarkers.push(marker);
+
+        bounds.extend(markerPosition);
+      });
+
+      setMarkers(newMarkers);
+
+      if (data.length > 0) {
+        mapInstance.setBounds(bounds);
       }
-    });
-  }, [searchKeyword, map, setResults]);
+    } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
+      setResults([]);
+    } else {
+      alert("검색 중 오류가 발생했습니다.");
+      setResults([]);
+    }
+  };
 
   return <div ref={mapContainer} style={{ width: "100%", height: "100%" }} />;
 };

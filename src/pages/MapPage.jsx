@@ -8,17 +8,17 @@ import CustomButton from "@components/common/button/custom-button";
 import Footer from "@components/common/footer/Footer";
 import KakaoMap from "@components/map/KakaoMap";
 
-// 지도 페이지
 function MapPage() {
   const location = useLocation();
-
   const locationQuery = location.state?.locationQuery || "";
 
   const [query, setQuery] = useState(locationQuery);
-  const [searchKeyword, setSearchKeyword] = useState(
-    locationQuery ? locationQuery + " 약국" : ""
-  );
   const [results, setResults] = useState([]);
+
+  const [searchTrigger, setSearchTrigger] = useState({
+    keyword: locationQuery ? locationQuery + " 약국" : "",
+    timestamp: Date.now(),
+  });
 
   const handleSearch = () => {
     if (!query.trim()) {
@@ -26,8 +26,10 @@ function MapPage() {
       return;
     }
 
-    setSearchKeyword(query.trim() + " 약국");
-    setResults([]);
+    setSearchTrigger({
+      keyword: query.trim() + " 약국",
+      timestamp: Date.now(),
+    });
   };
 
   const handleCurrentLocationSearch = () => {
@@ -42,7 +44,10 @@ function MapPage() {
             )}) 주변 약국을 검색합니다.`
           );
           setQuery("현재 위치");
-          setSearchKeyword("내 위치 약국");
+          setSearchTrigger({
+            keyword: "내 위치 약국",
+            timestamp: Date.now(),
+          });
         },
         (error) => {
           console.error("Geolocation Error:", error);
@@ -94,8 +99,8 @@ function MapPage() {
           </div>
 
           <p className="text-sm font-semibold text-gray-600 mt-6 mb-3">
-            {searchKeyword
-              ? `"${searchKeyword}" 검색 결과: ${results.length}개`
+            {searchTrigger.keyword
+              ? `"${searchTrigger.keyword}" 검색 결과: ${results.length}개`
               : "지역을 검색해주세요."}
           </p>
 
@@ -129,7 +134,7 @@ function MapPage() {
                 </div>
               </div>
             ))}
-            {results.length === 0 && searchKeyword && (
+            {results.length === 0 && searchTrigger.keyword && (
               <p className="text-sm text-center text-gray-500 pt-10">
                 검색 결과가 없습니다.
               </p>
@@ -138,7 +143,7 @@ function MapPage() {
         </aside>
 
         <section className="flex-grow bg-gray-200">
-          <KakaoMap searchKeyword={searchKeyword} setResults={setResults} />
+          <KakaoMap searchTrigger={searchTrigger} setResults={setResults} />
         </section>
       </main>
 
