@@ -60,7 +60,7 @@ export default function PrinterPage({ imgSrc = envelopeImg, featNum = 3 }) {
             {featNum}
           </span>
           <h2 className="text-lg font-bold text-gray-900">
-            페이약품 안심봉투 출력
+            페의약품 안심봉투 출력
           </h2>
         </div>
 
