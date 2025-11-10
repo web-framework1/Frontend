@@ -3,6 +3,7 @@ import React from "react";
 const SearchInput = ({
   value,
   onChange,
+  onSearch,
   placeholder = "검색어를 입력하세요",
   disabled = false,
 }) => {
@@ -12,6 +13,11 @@ const SearchInput = ({
         type="search"
         value={value}
         onChange={onChange}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && onSearch) {
+            onSearch();
+          }
+        }}
         placeholder={placeholder}
         disabled={disabled}
         className="
@@ -20,7 +26,7 @@ const SearchInput = ({
           focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500
           disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400
           border-gray-300
-          h-10 text-base px-3.5
+          h-10 text-base px-3.5 
         "
       />
     </div>
