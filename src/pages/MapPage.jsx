@@ -1,71 +1,16 @@
 import React from "react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import Logo from "@components/common/bar/logo";
+import NavHeaderMap from "@components/common/bar/NavHeaderMap";
 import SearchInput from "@components/common/input/search-input";
 import CustomButton from "@components/common/button/custom-button";
-import Footer from "@components/common/footer/footer";
-
-// 메뉴바
-const NavigationItem = ({ text, url }) => {
-  return (
-    <Link
-      to={url}
-      className="
-      font-semibold text-gray-700 hover:text-green-700 
-      px-3 py-auto rounded-lg hover:bg-green-200 transition-colors
-      "
-    >
-      {text}
-    </Link>
-  );
-};
-
-const MapPageHeader = () => {
-  const navigate = useNavigate();
-
-  return (
-    <div className="w-full flex items-center justify-between px-6 py-3">
-      <Logo />
-      <div className="flex items-center gap-5">
-        <nav>
-          <ul className="flex gap-5 list-none items-center">
-            <li>
-              <NavigationItem text="지도" url="/map" />
-            </li>
-            <li>
-              <NavigationItem text="안심 봉투" url="/printer" />
-            </li>
-            <li>
-              <NavigationItem text="AI약품검색" url="/searchAi" />
-            </li>
-            <li>
-              <NavigationItem text="퀴즈" url="/quiz" />
-            </li>
-            <li>
-              <NavigationItem text="게시판" url="/board" />
-            </li>
-          </ul>
-        </nav>
-        <CustomButton
-          type="button"
-          color="gradient"
-          onClick={() => {
-            navigate("/map");
-          }}
-        >
-          내 주변 수거함 찾기
-        </CustomButton>
-      </div>
-    </div>
-  );
-};
+import Footer from "@components/common/footer/Footer";
+import KakaoMap from "@components/map/KakaoMap";
 
 // 지도 페이지
-
 function MapPage() {
   const location = useLocation();
-  // main페이지에서 입력한 검색 쿼리가 있을 경우 받아옴
+
   const locationQuery = location.state?.locationQuery || "";
 
   const [query, setQuery] = useState(locationQuery);
@@ -92,7 +37,7 @@ function MapPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <header className="sticky top-0 z-30 backdrop-blur-sm bg-white/90 border-b border-black/5">
-        <MapPageHeader />
+        <NavHeaderMap />
       </header>
 
       <main className="flex-grow flex">
@@ -121,9 +66,11 @@ function MapPage() {
                 내 위치
               </CustomButton>
             </div>
-
             <CustomButton color="gradient" onClick={handleSearch}>
-              가까운 수거함 찾기
+              검색
+            </CustomButton>
+            <CustomButton color="gray" onClick={handleCurrentLocationSearch}>
+              내 위치
             </CustomButton>
           </div>
 
