@@ -7,6 +7,7 @@ import TopTitle from "@components/SearchAI/TopTitle";
 import ResultCard from "@/components/SearchAI/ResultCard";
 import TextCard from "@/components/SearchAI/textCard";
 import ImgCard from "@components/SearchAI/ImgCard";
+import ShareSNS from "../components/common/ShareSNS/ShareSNS";
 
 export default function SearchAiPage() {
   const [file, setFile] = useState(null); // 업로드 파일 state로 관리
