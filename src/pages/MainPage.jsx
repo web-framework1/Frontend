@@ -7,7 +7,7 @@ import BannerSlider from "@components/common/slider/banner-slider";
 import CustomButton from "@components/common/button/custom-button";
 import Footer from "@components/common/footer/footer";
 import Middle from "@components/common/middle/Middle";
-import ShareSNS from "../components/common/ShareSNS/ShareSNS";
+import ShareSNS from "@components/common/ShareSNS/ShareSNS";
 
 function MainPage() {
   const navigate = useNavigate();

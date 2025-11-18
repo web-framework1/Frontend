@@ -3,16 +3,19 @@ import { useDropzone } from "react-dropzone";
 import { XCircle, Upload } from "lucide-react";
 
 export default function ImgCard({ fetchData, file, productName, setFile }) {
-  const onDrop = useCallback((accepted) => {
-    if (!accepted?.length) return;
-    const f = accepted[0];
+  const onDrop = useCallback(
+    (accepted) => {
+      if (!accepted?.length) return;
+      const f = accepted[0];
 
-    // 이전 미리보기 해제
-    setFile((prev) => {
-      if (prev?.preview) URL.revokeObjectURL(prev.preview);
-      return Object.assign(f, { preview: URL.createObjectURL(f) });
-    });
-  }, []);
+      // 이전 미리보기 해제
+      setFile((prev) => {
+        if (prev?.preview) URL.revokeObjectURL(prev.preview);
+        return Object.assign(f, { preview: URL.createObjectURL(f) });
+      });
+    },
+    [setFile]
+  );
 
   //useDropzone 구조분해할당
   const { getRootProps, getInputProps, isDragAccept, isDragReject } =
