@@ -4,8 +4,8 @@ import AboutPage from "./pages/AboutPage";
 import React from "react";
 import MainPage from "@pages/MainPage";
 import MapPage from "@pages/MapPage";
-import SearchAiPage from "@pages/SearchAiPage";
-import PrinterPage from "@pages/PrinterPage";
+//import SearchAiPage from "@pages/SearchAiPage";
+//import PrinterPage from "@pages/PrinterPage";
 import Quiz from "@pages/QuizPage";
 import BoardPage from "@pages/BoardPage";
 import FaqPage from "@pages/FaqPage";
@@ -17,8 +17,8 @@ function App() {
       <Route path={routes.about} element={<AboutPage />}></Route>
       <Route path={routes.home} element={<MainPage />}></Route>
       <Route path={routes.map} element={<MapPage />}></Route>
-      <Route path={routes.searchAi} element={<SearchAiPage />}></Route>
-      <Route path={routes.printer} element={<PrinterPage />}></Route>
+      {/* <Route path="/search-ai" element={<SearchAiPage />} /> */}
+      {/*<Route path={routes.printer} element={<PrinterPage />}></Route>*/}
       <Route path={routes.quiz} element={<Quiz />}></Route>
       <Route path="/board" element={<BoardPage />} />
       <Route path="/faq" element={<FaqPage />} />
