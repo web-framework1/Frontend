@@ -4,6 +4,7 @@ import CustomButton from "@components/common/button/custom-button";
 import { useNavigate } from "react-router-dom";
 import routes from "@utils/constants/routes";
 
+// 네비게이션 안의 a태그 재활용 가능하게
 const NavigationItem = ({ text, url }) => {
   return (
     <a
@@ -41,7 +42,7 @@ function NavigationBar() {
               <NavigationItem text="퀴즈" url="/quiz" />
             </li>
             <li>
-              <NavigationItem text="게시판" url="/board" />
+              <NavigationItem text="게시판" url="/about" />
             </li>
           </ul>
         </nav>
