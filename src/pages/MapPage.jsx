@@ -13,7 +13,16 @@ function MapPage() {
   const locationQuery = location.state?.locationQuery || "";
 
   const [query, setQuery] = useState(locationQuery);
+  // 2. results는 빈 배열로 시작합니다.
   const [results, setResults] = useState([]);
+  const [mapState, setMapState] = useState({
+    // 3. 지도의 중심을 서울시청으로 기본 설정합니다.
+    center: {
+      lat: 37.566826,
+      lng: 126.9786567,
+    },
+    level: 3,
+  });
 
   // 초기 위치 (한성대학교)
   const [mapCenter, setMapCenter] = useState({
