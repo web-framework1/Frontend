@@ -1,26 +1,18 @@
 import React from "react";
-import { useState, useCallback, useEffect } from "react";
-import { useDropzone } from "react-dropzone";
+import { useState, useEffect } from "react";
 import { NavigationBar } from "@components/common/bar/navigation-bar";
 import Footer from "@components/common/footer/footer";
-import BasicButton from "@components/common/button/BasicButton";
 import axios from "axios";
+import TopTitle from "@components/SearchAI/TopTitle";
+import ResultCard from "@/components/SearchAI/ResultCard";
+import TextCard from "@/components/SearchAI/textCard";
+import ImgCard from "@components/SearchAI/ImgCard";
 
 export default function SearchAiPage() {
-  const [file, setFile] = useState(); // 업로드 파일 state로 관리
+  const [file, setFile] = useState(null); // 업로드 파일 state로 관리
+  const [productName, setProductName] = useState(""); // 검색할 제품명
   const [result, setResult] = useState(null); // ai 약 분석 결과 문장
-
-  // 파일 드롭시 호출
-  const onDrop = useCallback((accepted) => {
-    if (!accepted?.length) return;
-    const f = accepted[0];
-
-    // 이전 미리보기 해제
-    setFile((prev) => {
-      if (prev?.preview) URL.revokeObjectURL(prev.preview);
-      return Object.assign(f, { preview: URL.createObjectURL(f) });
-    });
-  }, []);
+  const [isLoading, setIsLoading] = useState(false); // 로딩중인가
 
   // 메모리 누수 방지
   useEffect(() => {
@@ -29,36 +21,35 @@ export default function SearchAiPage() {
     };
   }, [file]);
 
-  //useDropzone 구조분해할당
-  const { getRootProps, getInputProps, isDragAccept, isDragReject } =
-    useDropzone({
-      onDrop, // 파일 드롭시 호출되는 콜백함수
-      accept: { "image/*": [] }, // 이미지 파일만 허용
-      multiple: false, // 한 개만(다수 방지)
-      maxFiles: 1, // 추가 보강(파일 한개만)
-    });
+  async function fetchData(mode) {
+    setIsLoading(true); // 로딩시작
 
-  async function fetchData() {
-    const formDate = new FormData();
-    formDate.append("file", file);
+    if (mode === "image" && !file) return;
+    if (mode === "text" && !productName) return;
+
+    const selectedFile = file;
+    const selectedProductName = productName;
+
+    // UI 먼저 초기화
+    setFile(null);
+    setProductName("");
+
+    const formData = new FormData();
+    if (mode === "image") formData.append("file", selectedFile);
+    if (mode === "text") formData.append("productName", selectedProductName);
 
     try {
-      // 검색 API 호출 (POST)
       const res = await axios.post(
         "http://localhost:5000/api/searchAi",
-        formDate,
-        {
-          header: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
+        formData
       );
-      console.log(res);
       const { message } = res.data;
       setResult(message);
     } catch (err) {
       console.error("요청 실패: ", err);
-      // 실패 처리: 필요시 에러 상태 처리 및 UI 표시 추가 가능
+      alert("요청 실패");
+    } finally {
+      setIsLoading(false); // 로딩종료
     }
   }
 
@@ -68,33 +59,34 @@ export default function SearchAiPage() {
         {/* 네비게이션바 */}
         <NavigationBar />
       </header>
-      <main className="grow min-w-270 mx-auto px-7 py-7">
-        <div
-          {...getRootProps()}
-          className={`border-1 ... ${isDragAccept ? "border-green-500" : ""} ${
-            isDragReject ? "border-red-500" : ""
-          }`}
-        >
-          <input {...getInputProps()} />
-          이미지를 드래그하거나 클릭하세요
-        </div>
+      <main className="grow mx-auto px-7 py-7">
+        {/* 상단 제목 텍스트 */}
+        <TopTitle />
 
-        <div className="mt-4">
-          {file && (
-            <>
-              <div className="rounded">
-                <img
-                  src={file.preview}
-                  alt={file.name}
-                  className="w-100 h-100 m-10 "
-                />
-              </div>
-              <BasicButton onClick={fetchData}>전송</BasicButton>
-            </>
-          )}
-        </div>
+        {/* 메인 컨텐츠 영역 */}
+        <section className="min-w-[1000px] max-w-[1300px] bg-white rounded-2xl p-5 shadow-lg border border-black/5">
+          {/* 결과 영역 */}
+          <ResultCard isLoading={isLoading} result={result} />
 
-        <div className="bg-gray-50 m-10">{result}</div>
+          {/* 입력 카드 */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            {/* 이미지 업로드 */}
+            <ImgCard
+              fetchData={fetchData}
+              file={file}
+              productName={productName}
+              setFile={setFile}
+            />
+
+            {/* 텍스트 검색 */}
+            <TextCard
+              productName={productName}
+              setProductName={setProductName}
+              fetchData={fetchData}
+              file={file}
+            />
+          </div>
+        </section>
       </main>
       <Footer />
     </div>
