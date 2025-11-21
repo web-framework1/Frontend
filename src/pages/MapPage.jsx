@@ -1,202 +1,256 @@
 import React from "react";
-import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Logo from "@components/common/bar/logo";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { NavigationBar } from "@components/common/bar/navigation-bar";
 import SearchInput from "@components/common/input/search-input";
 import CustomButton from "@components/common/button/custom-button";
 import Footer from "@components/common/footer/footer";
-
-// 1. useKakaoLoader 훅을 import 목록에서 제거합니다.
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+import { CircleHelp } from "lucide-react";
 
-// --- MapPageHeader (변경 없음) ---
-const NavigationItem = ({ text, url }) => {
-  return (
-    <Link
-      to={url}
-      className="
-      font-semibold text-gray-700 hover:text-green-700 
-      px-3 py-auto rounded-lg hover:bg-green-200 transition-colors
-      "
-    >
-      {text}
-    </Link>
-  );
-};
-const MapPageHeader = () => {
-  const navigate = useNavigate();
-  return (
-    <div className="w-full flex items-center justify-between px-6 py-3">
-      <Logo />
-      <div className="flex items-center gap-5">
-        <nav>
-          <ul className="flex gap-5 list-none items-center">
-            <li>
-              <NavigationItem text="지도" url="/map" />
-            </li>
-            <li>
-              <NavigationItem text="안심 봉투" url="/printer" />
-            </li>
-            <li>
-              <NavigationItem text="AI약품검색" url="/searchAi" />
-            </li>
-            <li>
-              <NavigationItem text="퀴즈" url="/quiz" />
-            </li>
-            <li>
-              <NavigationItem text="게시판" url="/board" />
-            </li>
-          </ul>
-        </nav>
-        <CustomButton
-          type="button"
-          color="gradient"
-          onClick={() => {
-            navigate("/map");
-          }}
-        >
-          내 주변 수거함 찾기
-        </CustomButton>
-      </div>
-    </div>
-  );
-};
-
-// --- MapPage 본체 ---
 function MapPage() {
   const location = useLocation();
-  // main페이지에서 입력한 검색 쿼리가 있을 경우 받아옴
   const locationQuery = location.state?.locationQuery || "";
 
   const [query, setQuery] = useState(locationQuery);
   const [results, setResults] = useState([]);
+
+  // 초기 위치 (한성대학교)
   const [mapCenter, setMapCenter] = useState({
-    lat: 37.566826,
-    lng: 126.9786567,
+    lat: 37.582402,
+    lng: 127.010229,
   });
+  const [level, setLevel] = useState(3);
   const [markers, setMarkers] = useState([]);
 
-  // 2. useKakaoLoader 훅을 제거합니다. (loading, error 상태도 제거)
+  const searchPlaces = (searchQuery) => {
+    if (!searchQuery.trim()) return;
+
+    if (!window.kakao || !window.kakao.maps || !window.kakao.maps.services) {
+      alert("카카오맵 서비스가 로드되지 않았습니다.");
+      return;
+    }
+
+    const ps = new window.kakao.maps.services.Places();
+
+    ps.keywordSearch(searchQuery, (data, status) => {
+      if (status === window.kakao.maps.services.Status.OK) {
+        const newResults = data.map((item) => ({
+          id: item.id,
+          name: item.place_name,
+          address: item.road_address_name || item.address_name,
+          hours: "운영시간 정보 없음",
+          lat: parseFloat(item.y),
+          lng: parseFloat(item.x),
+          url: item.place_url,
+        }));
+        setResults(newResults);
+        setMarkers(newResults);
+
+        if (newResults.length > 0) {
+          setMapCenter({ lat: newResults[0].lat, lng: newResults[0].lng });
+          setLevel(3);
+        }
+      } else if (status === window.kakao.maps.services.Status.ZERO_RESULT) {
+        alert("검색 결과가 없습니다.");
+        setResults([]);
+        setMarkers([]);
+      } else {
+        alert("검색 중 오류가 발생했습니다.");
+        setResults([]);
+        setMarkers([]);
+      }
+    });
+  };
 
   const handleSearch = () => {
-    console.log("검색어:", query);
-    const fakeResults = [
-      {
-        id: 1,
-        name: "행복약국",
-        address: "서울 강남구 역삼동 123",
-        hours: "09:00-18:00",
-        lat: 37.500565,
-        lng: 127.036371,
-      },
-      {
-        id: 2,
-        name: "강남보건소",
-        address: "서울 강남구 논현동 456",
-        hours: "09:00-17:00",
-        lat: 37.51025,
-        lng: 127.030954,
-      },
-    ];
-    setResults(fakeResults);
-    setMarkers(fakeResults);
-    if (fakeResults.length > 0) {
-      setMapCenter({
-        lat: fakeResults[0].lat,
-        lng: fakeResults[0].lng,
-      });
+    searchPlaces(query);
+  };
+
+  const handleMyLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+
+          setMapCenter({ lat, lng });
+          setLevel(3);
+
+          if (!window.kakao || !window.kakao.maps.services) return;
+          const ps = new window.kakao.maps.services.Places();
+          const searchOptions = {
+            location: new window.kakao.maps.LatLng(lat, lng),
+            radius: 2000,
+            sort: window.kakao.maps.services.SortBy.DISTANCE,
+          };
+
+          ps.keywordSearch(
+            "약국",
+            (data, status) => {
+              if (status === window.kakao.maps.services.Status.OK) {
+                const newResults = data.map((item) => ({
+                  id: item.id,
+                  name: item.place_name,
+                  address: item.road_address_name || item.address_name,
+                  hours: "운영시간 정보 없음",
+                  lat: parseFloat(item.y),
+                  lng: parseFloat(item.x),
+                  url: item.place_url,
+                }));
+                setResults(newResults);
+                setMarkers(newResults);
+                setQuery("내 위치 주변 약국");
+              }
+            },
+            searchOptions
+          );
+        },
+        () => alert("위치 정보를 가져오는 데 실패했습니다.")
+      );
+    } else {
+      alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
     }
   };
 
+  useEffect(() => {
+    if (locationQuery) {
+      searchPlaces(locationQuery);
+    }
+  }, [locationQuery]);
+
   return (
-    // 3. 레이아웃 고정을 위해 h-screen을 적용합니다.
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-green-50">
+      {/* --- 헤더 영역 --- */}
       <header className="sticky top-0 z-30 backdrop-blur-sm bg-white/90 border-b border-black/5">
-        <MapPageHeader />
+        <NavigationBar />
       </header>
 
-      {/* 4. min-h-0을 추가하여 flex-grow가 올바르게 계산되도록 합니다. */}
-      <main className="flex-grow flex min-h-0">
-        <aside className="w-96 border-r border-gray-200 bg-white p-6 flex flex-col">
-          <h2 className="text-xl font-bold mb-4">수거함 위치 검색</h2>
-          <div className="flex flex-col gap-3">
-            <SearchInput
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onSearch={handleSearch}
-              placeholder="예) 강남구 역삼동"
-            />
-            <div className="flex gap-2">
-              <select className="flex-1 border border-gray-300 rounded-lg h-10 px-3 text-sm focus:outline-none focus:border-blue-500">
-                <option>전체</option>
-                <option>약국</option>
-                <option>보건소</option>
-              </select>
-              <select className="flex-1 border border-gray-300 rounded-lg h-10 px-3 text-sm focus:outline-none focus:border-blue-500">
-                <option>운영시간 전체</option>
-                <option>운영중</option>
-              </select>
-              <CustomButton color="gray" onClick={() => alert("내 위치")}>
-                내 위치
-              </CustomButton>
-            </div>
-            <CustomButton color="gradient" onClick={handleSearch}>
-              가까운 수거함 찾기
-            </CustomButton>
-          </div>
-          {/* 5. 사이드바가 스크롤되도록 overflow-y-auto를 추가합니다. */}
-          <div className="flex-grow overflow-y-auto mt-6 space-y-4">
-            {results.map((item) => (
-              <div
-                key={item.id}
-                className="border rounded-lg p-4 hover:bg-gray-50"
-              >
-                <h3 className="font-bold text-lg text-green-700">
-                  {item.name}
-                </h3>
-                <p className="text-sm text-gray-700">{item.address}</p>
-                <p className="text-xs text-gray-500 mt-1">{item.hours}</p>
-                <div className="mt-3">
-                  <CustomButton
-                    color="blue"
-                    onClick={() => alert(`${item.name} 길찾기`)}
-                  >
-                    길찾기
+      {/* --- 메인 컨텐츠 영역 --- */}
+      <main className="flex-grow flex w-full max-w-7xl mx-auto px-6 py-0 min-h-0">
+        <div className="flex w-full h-full border-x border-gray-200 bg-white shadow-sm">
+          {/* --- 왼쪽 사이드바 (검색 및 결과 목록) --- */}
+          <aside className="w-96 border-r border-gray-200 flex flex-col z-10">
+            <div className="p-5 border-b border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-gray-800">
+                  수거함 위치 검색
+                </h2>
+                <button
+                  className="text-gray-400 hover:text-green-600 transition-colors"
+                  onClick={() =>
+                    alert(
+                      "주소를 입력하거나 '내 위치' 버튼을 눌러 주변 수거함을 찾아보세요."
+                    )
+                  }
+                  title="도움말"
+                >
+                  <CircleHelp className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <SearchInput
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onSearch={handleSearch}
+                  placeholder="예) 한성대학교, 삼선동 약국"
+                />
+                <div className="flex gap-2">
+                  <select className="flex-1 border border-gray-300 rounded-lg h-9 px-2 text-sm focus:outline-none focus:border-green-500">
+                    <option>전체</option>
+                    <option>약국</option>
+                    <option>보건소</option>
+                  </select>
+                  <select className="flex-1 border border-gray-300 rounded-lg h-9 px-2 text-sm focus:outline-none focus:border-green-500">
+                    <option>운영시간 전체</option>
+                    <option>운영중</option>
+                  </select>
+                  <CustomButton color="gray" onClick={handleMyLocation}>
+                    내 위치
                   </CustomButton>
                 </div>
+                <CustomButton color="gradient" onClick={handleSearch}>
+                  가까운 수거함 찾기
+                </CustomButton>
               </div>
-            ))}
-          </div>
-        </aside>
+            </div>
 
-        {/* 6. 지도를 감싸는 <section>에 relative를 추가합니다. */}
-        <section className="flex-grow relative">
-          <Map
-            center={mapCenter}
-            // 7. Map 스타일에 absolute를 적용하여 <section>을 꽉 채웁니다.
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              width: "100%",
-              height: "100%",
-            }}
-            level={4}
-          >
-            {markers.map((marker) => (
-              <MapMarker
-                key={marker.id}
-                position={{ lat: marker.lat, lng: marker.lng }}
-              >
-                <div style={{ padding: "5px", color: "#000" }}>
-                  {marker.name}
+            <div className="flex-grow overflow-y-auto p-0 bg-white">
+              {results.length === 0 ? (
+                <div className="h-full flex flex-col items-center justify-center text-gray-400 text-sm">
+                  <p>검색 결과가 없습니다.</p>
                 </div>
-              </MapMarker>
-            ))}
-          </Map>
-        </section>
+              ) : (
+                <div className="divide-y divide-gray-100">
+                  {results.map((item) => (
+                    <div
+                      key={item.id}
+                      className="p-5 hover:bg-green-50 transition-colors cursor-pointer"
+                      onClick={() => {
+                        setMapCenter({ lat: item.lat, lng: item.lng });
+                        setLevel(3);
+                      }}
+                    >
+                      <h3 className="font-bold text-base text-green-700 mb-1">
+                        {item.name}
+                      </h3>
+                      <p className="text-sm text-gray-600">{item.address}</p>
+                      <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                        🕒 {item.hours}
+                      </p>
+                      <div className="mt-3 flex justify-end">
+                        <CustomButton
+                          color="blue"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(
+                              `https://map.kakao.com/link/to/${item.name},${item.lat},${item.lng}`,
+                              "_blank"
+                            );
+                          }}
+                        >
+                          길찾기
+                        </CustomButton>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </aside>
+
+          {/* --- 오른쪽 지도 영역 --- */}
+          <section className="flex-grow bg-gray-100 relative">
+            <Map
+              center={mapCenter}
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+              }}
+              level={level}
+              onZoomChanged={(map) => setLevel(map.getLevel())}
+            >
+              {markers.map((marker) => (
+                <MapMarker
+                  key={marker.id}
+                  position={{ lat: marker.lat, lng: marker.lng }}
+                  title={marker.name}
+                >
+                  <div style={{ padding: "5px", color: "#000" }}>
+                    {marker.name}
+                  </div>
+                </MapMarker>
+              ))}
+            </Map>
+          </section>
+        </div>
       </main>
 
+      {/* --- 푸터 영역 --- */}
       <Footer />
     </div>
   );
