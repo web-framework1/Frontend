@@ -1,5 +1,5 @@
 import React from "react";
-import { NavigationBar } from "@components/common/bar/navigation-bar";
+import { NavigationBar } from "@components/common/bar/navigation-bar"; // 기존 경로 유지
 import { useNavigate } from "react-router-dom";
 import routes from "@utils/constants/routes";
 import Card from "@components/common/card/Card";
@@ -7,6 +7,7 @@ import BannerSlider from "@components/common/slider/banner-slider";
 import CustomButton from "@components/common/button/custom-button";
 import Footer from "@components/common/footer/footer";
 import Middle from "@components/common/middle/Middle";
+import BoardPreview from "@components/board/BoardPreview"; // BoardPreview 경로 확인 필요
 import ShareSNS from "@components/common/ShareSNS/ShareSNS";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import {
