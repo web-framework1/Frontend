@@ -83,7 +83,7 @@ export default function QuizCard({
           }`}
         >
           {selectedOption === currentQuiz.answer
-            ? "✅ 정답입니다! (10점 획득)"
+            ? "✅ 정답입니다! (100점 획득)"
             : `❌ 오답입니다. 정답은 ${currentQuiz.answer}번입니다.`}
           <p className="mt-2 text-sm font-normal">
             해설: {currentQuiz.explanation}
