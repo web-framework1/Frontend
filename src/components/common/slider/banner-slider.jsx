@@ -42,7 +42,7 @@ function BannerSlider() {
   };
 
   return (
-    <section className="mb-6">
+    <section className="mb-6 ">
       <div className="relative h-90 rounded-xl overflow-hidden shadow-lg">
         <div
           className="flex h-full transition-transform duration-700 ease-in-out"

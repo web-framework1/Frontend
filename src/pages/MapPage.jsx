@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "@components/common/bar/logo";
 import SearchInput from "@components/common/input/search-input";
 import CustomButton from "@components/common/button/custom-button";
@@ -35,10 +35,10 @@ const MapPageHeader = () => {
               <NavigationItem text="지도" url="/map" />
             </li>
             <li>
-              <NavigationItem text="안심 봉투" url="/safe-bag" />
+              <NavigationItem text="안심 봉투" url="/printer" />
             </li>
             <li>
-              <NavigationItem text="AI약품검색" url="/ai-search" />
+              <NavigationItem text="AI약품검색" url="/searchAi" />
             </li>
             <li>
               <NavigationItem text="퀴즈" url="/quiz" />
@@ -64,7 +64,11 @@ const MapPageHeader = () => {
 
 // --- MapPage 본체 ---
 function MapPage() {
-  const [query, setQuery] = useState("");
+  const location = useLocation();
+  // main페이지에서 입력한 검색 쿼리가 있을 경우 받아옴
+  const locationQuery = location.state?.locationQuery || "";
+
+  const [query, setQuery] = useState(locationQuery);
   const [results, setResults] = useState([]);
   const [mapCenter, setMapCenter] = useState({
     lat: 37.566826,

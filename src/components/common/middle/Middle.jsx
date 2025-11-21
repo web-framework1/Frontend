@@ -1,9 +1,12 @@
 import React from "react";
 import SearchInput from "@components/common/input/search-input";
 import CustomButton from "@components/common/button/custom-button";
+import { useNavigate } from "react-router-dom";
+import routes from "@utils/constants/routes";
 import { useState } from "react";
 
 export default function Middle() {
+  const navigate = useNavigate();
   const [q1, setQ] = useState("");
 
   return (
@@ -18,10 +21,15 @@ export default function Middle() {
         <SearchInput
           value={q1}
           onChange={(e) => setQ(e.target.value)}
-          onSearch={() => alert(q1)}
           placeholder="예) 서울 강남구 테헤란로 10"
         />
-        <CustomButton onClick={() => alert(q1)}>찾기</CustomButton>
+        <CustomButton
+          onClick={() => {
+            navigate(routes.map, { state: { locationQuery: `${q1}` } });
+          }}
+        >
+          찾기
+        </CustomButton>
       </div>
       <div className="flex items-center gap-3 mt-4 text-gray-600">
         <span>또는:</span>
