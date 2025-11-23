@@ -42,7 +42,7 @@ function NavigationBar() {
               <NavigationItem text="퀴즈" url="/quiz" />
             </li>
             <li>
-              <NavigationItem text="게시판" url="/about" />
+              <NavigationItem text="게시판" url="/board" />
             </li>
           </ul>
         </nav>
