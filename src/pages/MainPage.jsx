@@ -9,6 +9,7 @@ import Footer from "@components/common/footer/footer";
 import Middle from "@components/common/middle/Middle";
 import ShareSNS from "@components/common/ShareSNS/ShareSNS";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+// 아이콘 임포트 (BoardPreview, QnaPreview 내부 아이콘은 제외)
 import {
   ScanSearch,
   Printer,
@@ -17,24 +18,12 @@ import {
   Sparkles,
   Gamepad2,
   Puzzle,
-  FileText,
-  MessageCircleQuestion,
   BarChart3,
   Leaf,
 } from "lucide-react";
-
-// [가상 데이터] 내용 수정 필요 /QnA 목록
-const recentPosts = [
-  { id: 1, title: "10월 전국 수거 캠페인 참여 안내", date: "2024-10-15" },
-  { id: 2, title: "폐의약품 수거함 위치 업데이트 (9월)", date: "2024-09-25" },
-  { id: 3, title: "올바른 약물 폐기 교육 자료 배포", date: "2024-09-10" },
-];
-
-const recentFaqs = [
-  { id: 1, question: "유통기한이 지난 약은 어떻게 하나요?" },
-  { id: 2, question: "시럽이나 물약은 어떻게 버리나요?" },
-  { id: 3, question: "안심 봉투는 어디서 구할 수 있나요?" },
-];
+// 세익님의 컴포넌트 임포트
+import BoardPreview from "@components/board/BoardPreview";
+import QnaPreview from "@components/board/QnaPreview";
 
 function MainPage() {
   const navigate = useNavigate();
@@ -48,6 +37,7 @@ function MainPage() {
           <NavigationBar />
         </header>
 
+        {/* SNS공유 사이드 바: props로 children */}
         <ShareSNS>
           <main className="max-w-6xl mx-auto px-7 py-7">
             <BannerSlider />
@@ -61,11 +51,12 @@ function MainPage() {
                 className="flex flex-col justify-between h-full"
               >
                 <div>
-                  <p className="mb-4">
+                  <p className="mb-4 text-sm text-gray-600">
                     수거함 위치를 잘 모르겠다면 가까운 수거함을 찾아보고, 폐기할
                     제품의 환경 영향을 검색하세요.
                   </p>
 
+                  {/* 문구와 버튼 사이 미니맵 영역 */}
                   <div className="w-full h-40 mb-4 rounded-lg overflow-hidden border border-gray-200 relative z-0">
                     <Map
                       center={defaultCenter}
@@ -208,46 +199,13 @@ function MainPage() {
                 </div>
               </Card>
 
-              {/* 4. 게시판 */}
+              {/* 4. 게시판 / 이벤트 (세익 님 컴포넌트 적용) */}
               <Card
-                title={
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-5 h-5 text-orange-500" />
-                    <span>게시판</span>
-                  </div>
-                }
-                className="cursor-pointer hover:border-orange-200 hover:shadow-md transition-all group relative overflow-hidden"
-                onClick={() => {
-                  navigate("/board"); // 게시판 페이지로 이동
-                }}
+                className="h-auto cursor-pointer hover:border-orange-200 hover:shadow-md transition-all"
+                onClick={() => navigate(routes.board || "/board")}
               >
-                <div className="relative z-10">
-                  <ul className="space-y-3 list-none text-sm">
-                    {recentPosts.map((post) => (
-                      <li
-                        key={post.id}
-                        className="flex items-center gap-2 text-gray-700"
-                      >
-                        <span className="w-1.5 h-1.5 bg-orange-400 rounded-full flex-shrink-0"></span>
-                        <span className="hover:underline truncate flex-1">
-                          {post.title}
-                        </span>
-                        <span className="text-xs text-gray-400 flex-shrink-0">
-                          {post.date}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                  <div className="mt-4 text-right">
-                    <span className="text-xs text-orange-500 font-bold group-hover:mr-1 transition-all">
-                      더보기 +
-                    </span>
-                  </div>
-                </div>
-                {/* 배경 아이콘 */}
-                <div className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-10 group-hover:rotate-12 transition-all duration-500">
-                  <FileText size={130} className="text-orange-500" />
-                </div>
+                {/* isMain={true}를 전달해서 메인 화면용 스타일 적용 */}
+                <BoardPreview isMain={true} />
               </Card>
 
               {/* 5. 환경 영향 시각화 */}
@@ -284,41 +242,13 @@ function MainPage() {
                 </div>
               </Card>
 
-              {/* 6. 자주 묻는 질문 (Q&A)*/}
+              {/* 6. 자주 묻는 질문 (Q&A) (세익 님 컴포넌트 적용) */}
               <Card
-                title={
-                  <div className="flex items-center gap-2">
-                    <MessageCircleQuestion className="w-5 h-5 text-slate-600" />
-                    <span>자주 묻는 질문 (Q&A)</span>
-                  </div>
-                }
-                className="cursor-pointer hover:border-slate-300 hover:shadow-md transition-all group relative overflow-hidden"
-                onClick={() => {
-                  navigate("/faq"); // FAQ 페이지로 이동
-                }}
+                className="h-auto cursor-pointer hover:border-slate-300 hover:shadow-md transition-all"
+                onClick={() => navigate(routes.faq || "/faq")}
               >
-                <div className="relative z-10 text-sm text-gray-700 space-y-3">
-                  {recentFaqs.map((faq) => (
-                    <p key={faq.id} className="flex items-start gap-2 truncate">
-                      <span className="font-bold text-slate-500 flex-shrink-0">
-                        Q.
-                      </span>
-                      <span className="truncate">{faq.question}</span>
-                    </p>
-                  ))}
-                  <div className="mt-2 text-right">
-                    <span className="text-xs text-slate-500 font-bold group-hover:mr-1 transition-all">
-                      질문 더보기 +
-                    </span>
-                  </div>
-                </div>
-                {/* 배경 아이콘 */}
-                <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 group-hover:scale-105 transition-all duration-500">
-                  <MessageCircleQuestion
-                    size={120}
-                    className="text-slate-600"
-                  />
-                </div>
+                {/* QnaPreview 컴포넌트 렌더링 */}
+                <QnaPreview />
               </Card>
             </section>
           </main>
