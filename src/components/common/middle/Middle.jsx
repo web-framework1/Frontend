@@ -1,11 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import SearchInput from "@components/common/input/search-input";
 import CustomButton from "@components/common/button/custom-button";
-import { useState } from "react";
 import { cn } from "@utils/functions/utils";
 
 export default function Middle({ className }) {
   const [q1, setQ] = useState("");
+  const navigate = useNavigate();
+
+  // 검색 핸들러: 입력된 검색어를 가지고 지도 페이지로 이동
+  const handleSearch = () => {
+    navigate("/map", { state: { locationQuery: q1 } });
+  };
 
   const tags = ["#상상대로", "#성북구", "#보건소", "#주민센터", "#약국"];
 
@@ -29,10 +35,10 @@ export default function Middle({ className }) {
         <SearchInput
           value={q1}
           onChange={(e) => setQ(e.target.value)}
-          onSearch={() => alert(q1)}
+          onSearch={handleSearch}
           placeholder="예) 서울 성북구 삼선교로16길 116, 한성대학교"
         />
-        <CustomButton onClick={() => alert(q1)}>찾기</CustomButton>
+        <CustomButton onClick={handleSearch}>찾기</CustomButton>{" "}
       </div>
 
       <div className="flex flex-col gap-2">
@@ -41,7 +47,11 @@ export default function Middle({ className }) {
           {tags.map((tag, index) => (
             <button
               key={index}
-              onClick={() => setQ(tag.replace("#", ""))}
+              onClick={() =>
+                navigate("/map", {
+                  state: { locationQuery: tag.replace("#", "") },
+                })
+              }
               className="px-3 py-1 bg-white border border-green-200 rounded-full text-sm text-green-600 hover:bg-green-50 transition-colors shadow-sm"
             >
               {tag}
@@ -50,12 +60,18 @@ export default function Middle({ className }) {
         </div>
 
         <div className="flex gap-3 mt-2 text-sm text-gray-500">
-          <a href="#" className="hover:underline hover:text-green-700">
+          <button
+            onClick={() => navigate("/searchAi")}
+            className="hover:underline hover:text-green-700"
+          >
             제품 검색 &rarr;
-          </a>
-          <a href="#" className="hover:underline hover:text-green-700">
+          </button>
+          <button
+            onClick={() => navigate("/quiz")}
+            className="hover:underline hover:text-green-700"
+          >
             환경 퀴즈 &rarr;
-          </a>
+          </button>
         </div>
       </div>
     </section>
