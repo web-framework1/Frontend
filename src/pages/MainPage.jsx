@@ -9,7 +9,6 @@ import Footer from "@components/common/footer/footer";
 import Middle from "@components/common/middle/Middle";
 import ShareSNS from "@components/common/ShareSNS/ShareSNS";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
-// 아이콘 임포트 (BoardPreview, QnaPreview 내부 아이콘은 제외)
 import {
   ScanSearch,
   Printer,
@@ -18,10 +17,11 @@ import {
   Sparkles,
   Gamepad2,
   Puzzle,
+  FileText,
+  MessageCircleQuestion,
   BarChart3,
   Leaf,
 } from "lucide-react";
-// 세익님의 컴포넌트 임포트
 import BoardPreview from "@components/board/BoardPreview";
 import QnaPreview from "@components/board/QnaPreview";
 
@@ -93,7 +93,7 @@ function MainPage() {
             </section>
 
             <section className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-7">
-              {/* 1. AI 약검색 */}
+              {/* AI 약검색 */}
               <Card
                 title={
                   <div className="flex items-center gap-2">
@@ -124,7 +124,7 @@ function MainPage() {
                 </div>
               </Card>
 
-              {/* 2. 안심 봉투 */}
+              {/* 안심 봉투 */}
               <Card
                 title={
                   <div className="flex items-center gap-2">
@@ -155,7 +155,7 @@ function MainPage() {
                 </div>
               </Card>
 
-              {/* 3. 퀴즈 / 미니게임 */}
+              {/* 퀴즈 */}
               <Card
                 title={
                   <div className="flex items-center gap-2">
@@ -177,7 +177,9 @@ function MainPage() {
                       color="blue"
                       onClick={(e) => {
                         e.stopPropagation();
-                        alert("O");
+                        alert(
+                          "틀렸습니다!\n\n폐의약품을 변기나 하수구에 버리면 수질과 토양이 심각하게 오염되어 생태계를 파괴합니다.\n\n반드시 전용 수거함에 배출해주세요!"
+                        );
                       }}
                     >
                       O
@@ -187,7 +189,9 @@ function MainPage() {
                       color="red"
                       onClick={(e) => {
                         e.stopPropagation();
-                        alert("X");
+                        alert(
+                          "정답입니다!\n\n환경 오염을 막기 위해 폐의약품은 반드시 약국, 보건소, 주민센터 등의 전용 수거함에 분리 배출해야 합니다.\n\n잘 알고 계시네요!"
+                        );
                       }}
                     >
                       X
@@ -199,16 +203,26 @@ function MainPage() {
                 </div>
               </Card>
 
-              {/* 4. 게시판 / 이벤트 (세익 님 컴포넌트 적용) */}
+              {/* 게시판 */}
               <Card
-                className="h-auto cursor-pointer hover:border-orange-200 hover:shadow-md transition-all"
+                title={
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-orange-500" />
+                    <span>게시판 / 이벤트</span>
+                  </div>
+                }
+                className="h-auto cursor-pointer hover:border-orange-200 hover:shadow-md transition-all group relative overflow-hidden"
                 onClick={() => navigate(routes.board || "/board")}
               >
-                {/* isMain={true}를 전달해서 메인 화면용 스타일 적용 */}
-                <BoardPreview isMain={true} />
+                <div className="relative z-10">
+                  <BoardPreview isMain={true} />
+                </div>
+                <div className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-10 group-hover:rotate-12 transition-all duration-500">
+                  <FileText size={130} className="text-orange-500" />
+                </div>
               </Card>
 
-              {/* 5. 환경 영향 시각화 */}
+              {/* 환경 영향 시각화 */}
               <Card
                 title={
                   <div className="flex items-center gap-2">
@@ -242,13 +256,26 @@ function MainPage() {
                 </div>
               </Card>
 
-              {/* 6. 자주 묻는 질문 (Q&A) (세익 님 컴포넌트 적용) */}
+              {/* Q&A */}
               <Card
-                className="h-auto cursor-pointer hover:border-slate-300 hover:shadow-md transition-all"
+                title={
+                  <div className="flex items-center gap-2">
+                    <MessageCircleQuestion className="w-5 h-5 text-slate-600" />
+                    <span>Q&A</span>
+                  </div>
+                }
+                className="h-auto cursor-pointer hover:border-slate-300 hover:shadow-md transition-all group relative overflow-hidden"
                 onClick={() => navigate(routes.faq || "/faq")}
               >
-                {/* QnaPreview 컴포넌트 렌더링 */}
-                <QnaPreview />
+                <div className="relative z-10">
+                  <QnaPreview />
+                </div>
+                <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 group-hover:scale-105 transition-all duration-500">
+                  <MessageCircleQuestion
+                    size={120}
+                    className="text-slate-600"
+                  />
+                </div>
               </Card>
             </section>
           </main>

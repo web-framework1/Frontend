@@ -1,21 +1,21 @@
 import React from "react";
 import Logo from "@components/common/bar/logo";
 import CustomButton from "@components/common/button/custom-button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import routes from "@utils/constants/routes";
 
 // 네비게이션 안의 a태그 재활용 가능하게
 const NavigationItem = ({ text, url }) => {
   return (
-    <a
-      href={url}
+    <Link
+      to={url}
       className="
       font-semibold text-gray-700 hover:text-green-700 
       px-3 py-auto rounded-lg hover:bg-green-200 transition-colors
       "
     >
       {text}
-    </a>
+    </Link>
   );
 };
 
@@ -43,6 +43,9 @@ function NavigationBar() {
             </li>
             <li>
               <NavigationItem text="게시판" url="/board" />
+            </li>
+            <li>
+              <NavigationItem text="Q&A" url="/faq" />
             </li>
           </ul>
         </nav>

@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { FileText } from "lucide-react";
 
+// 게시글 아이템 (내부 컴포넌트)
 const BoardItem = ({ tag, tagColor, title, description, date }) => (
   <div className="flex items-start gap-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
     <div className="mt-1">
@@ -48,13 +49,6 @@ const boardItems = [
 export default function BoardPreview({ isMain }) {
   return (
     <div className="w-full h-full flex flex-col">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-gray-800">게시판 / 이벤트</h3>
-        {isMain && (
-          <span className="text-xs text-gray-500 font-medium">더보기 +</span>
-        )}
-      </div>
-
       <div className="flex-1 flex flex-col gap-1">
         {boardItems.map((item, index) => (
           <BoardItem
@@ -67,6 +61,15 @@ export default function BoardPreview({ isMain }) {
           />
         ))}
       </div>
+
+      {/* 더보기 버튼 (하단 유지) */}
+      {isMain && (
+        <div className="mt-4 text-right">
+          <span className="text-xs text-orange-500 font-bold cursor-pointer hover:mr-1 transition-all">
+            더보기 +
+          </span>
+        </div>
+      )}
     </div>
   );
 }
