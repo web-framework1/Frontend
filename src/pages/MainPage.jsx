@@ -1,5 +1,5 @@
 import React from "react";
-import { NavigationBar } from "@components/common/bar/navigation-bar"; // 기존 경로 유지
+import { NavigationBar } from "@components/common/bar/navigation-bar";
 import { useNavigate } from "react-router-dom";
 import routes from "@utils/constants/routes";
 import Card from "@components/common/card/Card";
@@ -7,7 +7,6 @@ import BannerSlider from "@components/common/slider/banner-slider";
 import CustomButton from "@components/common/button/custom-button";
 import Footer from "@components/common/footer/footer";
 import Middle from "@components/common/middle/Middle";
-import BoardPreview from "@components/board/BoardPreview"; // BoardPreview 경로 확인 필요
 import ShareSNS from "@components/common/ShareSNS/ShareSNS";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import {
@@ -18,18 +17,29 @@ import {
   Sparkles,
   Gamepad2,
   Puzzle,
-  Megaphone,
-  Calendar,
+  FileText,
+  MessageCircleQuestion,
   BarChart3,
   Leaf,
-  Footprints,
-  MapPin,
 } from "lucide-react";
+
+// [가상 데이터] 내용 수정 필요 /QnA 목록
+const recentPosts = [
+  { id: 1, title: "10월 전국 수거 캠페인 참여 안내", date: "2024-10-15" },
+  { id: 2, title: "폐의약품 수거함 위치 업데이트 (9월)", date: "2024-09-25" },
+  { id: 3, title: "올바른 약물 폐기 교육 자료 배포", date: "2024-09-10" },
+];
+
+const recentFaqs = [
+  { id: 1, question: "유통기한이 지난 약은 어떻게 하나요?" },
+  { id: 2, question: "시럽이나 물약은 어떻게 버리나요?" },
+  { id: 3, question: "안심 봉투는 어디서 구할 수 있나요?" },
+];
 
 function MainPage() {
   const navigate = useNavigate();
 
-  const defaultCenter = { lat: 37.582402, lng: 127.010229 };
+  const defaultCenter = { lat: 37.566826, lng: 126.9786567 };
 
   return (
     <>
@@ -198,33 +208,35 @@ function MainPage() {
                 </div>
               </Card>
 
-              {/* 4. 게시판 / 이벤트 */}
+              {/* 4. 게시판 */}
               <Card
                 title={
                   <div className="flex items-center gap-2">
-                    <Megaphone className="w-5 h-5 text-orange-500" />
-                    <span>게시판 / 이벤트</span>
+                    <FileText className="w-5 h-5 text-orange-500" />
+                    <span>게시판</span>
                   </div>
                 }
                 className="cursor-pointer hover:border-orange-200 hover:shadow-md transition-all group relative overflow-hidden"
                 onClick={() => {
-                  navigate(routes.about);
+                  navigate("/board"); // 게시판 페이지로 이동
                 }}
               >
                 <div className="relative z-10">
                   <ul className="space-y-3 list-none text-sm">
-                    <li className="flex items-center gap-2 text-gray-700">
-                      <span className="w-1.5 h-1.5 bg-orange-400 rounded-full"></span>
-                      <a href="#" className="hover:underline truncate">
-                        [10.15] 한국 휴가 캠페인 시작
-                      </a>
-                    </li>
-                    <li className="flex items-center gap-2 text-gray-700">
-                      <span className="w-1.5 h-1.5 bg-gray-300 rounded-full"></span>
-                      <a href="#" className="hover:underline truncate">
-                        [09.25] 교육 자료 업로드 안내
-                      </a>
-                    </li>
+                    {recentPosts.map((post) => (
+                      <li
+                        key={post.id}
+                        className="flex items-center gap-2 text-gray-700"
+                      >
+                        <span className="w-1.5 h-1.5 bg-orange-400 rounded-full flex-shrink-0"></span>
+                        <span className="hover:underline truncate flex-1">
+                          {post.title}
+                        </span>
+                        <span className="text-xs text-gray-400 flex-shrink-0">
+                          {post.date}
+                        </span>
+                      </li>
+                    ))}
                   </ul>
                   <div className="mt-4 text-right">
                     <span className="text-xs text-orange-500 font-bold group-hover:mr-1 transition-all">
@@ -232,8 +244,9 @@ function MainPage() {
                     </span>
                   </div>
                 </div>
+                {/* 배경 아이콘 */}
                 <div className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-10 group-hover:rotate-12 transition-all duration-500">
-                  <Calendar size={130} className="text-orange-500" />
+                  <FileText size={130} className="text-orange-500" />
                 </div>
               </Card>
 
@@ -271,32 +284,40 @@ function MainPage() {
                 </div>
               </Card>
 
-              {/* 6. 참여방법 */}
+              {/* 6. 자주 묻는 질문 (Q&A)*/}
               <Card
                 title={
                   <div className="flex items-center gap-2">
-                    <Footprints className="w-5 h-5 text-slate-600" />
-                    <span>참여방법</span>
+                    <MessageCircleQuestion className="w-5 h-5 text-slate-600" />
+                    <span>자주 묻는 질문 (Q&A)</span>
                   </div>
                 }
-                className="hover:border-slate-300 hover:shadow-md transition-all group relative overflow-hidden"
+                className="cursor-pointer hover:border-slate-300 hover:shadow-md transition-all group relative overflow-hidden"
+                onClick={() => {
+                  navigate("/faq"); // FAQ 페이지로 이동
+                }}
               >
-                <div className="relative z-10 text-sm text-gray-700 space-y-2">
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-slate-800">1.</span>
-                    <span>주소로 주변 수거함 찾기</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-slate-800">2.</span>
-                    <span>약품 분류 확인 (알약/물약 등)</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-slate-800">3.</span>
-                    <span>가까운 수거함에 배출하기</span>
-                  </p>
+                <div className="relative z-10 text-sm text-gray-700 space-y-3">
+                  {recentFaqs.map((faq) => (
+                    <p key={faq.id} className="flex items-start gap-2 truncate">
+                      <span className="font-bold text-slate-500 flex-shrink-0">
+                        Q.
+                      </span>
+                      <span className="truncate">{faq.question}</span>
+                    </p>
+                  ))}
+                  <div className="mt-2 text-right">
+                    <span className="text-xs text-slate-500 font-bold group-hover:mr-1 transition-all">
+                      질문 더보기 +
+                    </span>
+                  </div>
                 </div>
+                {/* 배경 아이콘 */}
                 <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 group-hover:scale-105 transition-all duration-500">
-                  <MapPin size={120} className="text-slate-600" />
+                  <MessageCircleQuestion
+                    size={120}
+                    className="text-slate-600"
+                  />
                 </div>
               </Card>
             </section>
