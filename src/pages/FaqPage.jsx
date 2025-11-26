@@ -2,9 +2,9 @@ import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { NavigationBar } from "@components/common/bar/navigation-bar";
 import Footer from "@components/common/footer/footer";
+
 import { allQaItems } from "../mock/faqData.js";
 
-/* --- [아이콘 컴포넌트] --- */
 const SearchIcon = () => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

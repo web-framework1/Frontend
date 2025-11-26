@@ -9,6 +9,8 @@ import Footer from "@components/common/footer/footer";
 import Middle from "@components/common/middle/Middle";
 import ShareSNS from "@components/common/ShareSNS/ShareSNS";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+import QnaPreview from "@components/board/QnaPreview";
+
 import {
   ScanSearch,
   Printer,

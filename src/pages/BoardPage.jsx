@@ -4,7 +4,6 @@ import { NavigationBar } from "@components/common/bar/navigation-bar";
 import Footer from "@components/common/footer/footer";
 
 import { allPosts } from "../mock/postsData.js";
-import { allQaItems } from "../mock/faqData.js";
 
 const SearchIcon = () => (
   <svg
@@ -93,7 +92,7 @@ function BoardPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  const combinedData = [...allPosts, ...allQaItems];
+  const combinedData = allPosts.filter((item) => item.type === "post");
 
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
@@ -107,12 +106,6 @@ function BoardPage() {
     return combinedData.filter((item) => {
       if (item.type === "post") {
         return item.title && item.title.toLowerCase().includes(searchTerm);
-      }
-      if (item.type === "qna" || item.type === "qa" || item.question) {
-        return (
-          (item.question && item.question.toLowerCase().includes(searchTerm)) ||
-          (item.answer && item.answer.toLowerCase().includes(searchTerm))
-        );
       }
       return false;
     });
@@ -131,7 +124,7 @@ function BoardPage() {
 
       <main className="flex-grow container max-w-3xl mx-auto px-4 py-10">
         <div className="mb-6">
-          {/* 헤더 영역: 제목만 남김 (목록 버튼 삭제) */}
+          {/* 헤더 영역 */}
           <div className="flex items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-2">
               <span>🌱</span>
