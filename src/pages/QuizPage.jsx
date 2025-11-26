@@ -14,8 +14,11 @@ export default function QuizPage() {
   const [score, setScore] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
   const [renkers, setRenkers] = useState([]);
-  const currentQuiz = quizMockData[currentQuizIndex];
-  const isLastQuestion = currentQuizIndex === quizMockData.length - 1;
+  const [quizList, setQuizList] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const currentQuiz = quizList[currentQuizIndex];
+  const isLastQuestion =
+    quizList.length > 0 && currentQuizIndex === quizList.length - 1;
 
   // 서버로 부터 목업데이터 받아옴
   const fetchRankings = async () => {
@@ -56,9 +59,15 @@ export default function QuizPage() {
 
   // 랭킹 데이터 로드
   useEffect(() => {
-    fetchRankings();
-  }, []); // 처음 한 번만 실행
+    // 전체 데이터를 랜덤하게 섞어서(shuffle) 5개만 뽑기
+    const shuffled = [...quizMockData].sort(() => 0.5 - Math.random());
+    const selectedQuizzes = shuffled.slice(0, 5);
 
+    setQuizList(selectedQuizzes);
+    setLoading(false);
+
+    fetchRankings(); // 랭킹 데이터 가져오기 (기존 로직 유지)
+  }, []);
   const handleNextQuestion = () => {
     if (selectedOption === null && !showAnswer) {
       alert("답변을 선택해 주세요!");
@@ -130,7 +139,7 @@ export default function QuizPage() {
           {/* 1. 퀴즈 카드 UI (로직을 props로 전달) */}
           <QuizCard
             currentQuiz={currentQuiz}
-            quizTotal={quizMockData.length}
+            quizTotal={quizList.length}
             currentQuizIndex={currentQuizIndex}
             selectedOption={selectedOption}
             setSelectedOption={setSelectedOption}
