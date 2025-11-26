@@ -10,6 +10,7 @@ import Middle from "@components/common/middle/Middle";
 import ShareSNS from "@components/common/ShareSNS/ShareSNS";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
 import QnaPreview from "@components/board/QnaPreview";
+import BoardPreview from "@components/board/BoardPreview";
 
 import {
   ScanSearch,
@@ -24,8 +25,6 @@ import {
   BarChart3,
   Leaf,
 } from "lucide-react";
-import BoardPreview from "@components/board/BoardPreview";
-import QnaPreview from "@components/board/QnaPreview";
 
 function MainPage() {
   const navigate = useNavigate();

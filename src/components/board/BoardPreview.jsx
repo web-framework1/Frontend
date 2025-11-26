@@ -52,7 +52,7 @@ const BoardItem = ({ tag, tagColor, title, description, link = "#" }) => (
     <div>
       <p className="text-sm text-gray-600 truncate">{description}</p>
     </div>
-  </div>
+  </Link>
 );
 
 function BoardPreview() {
@@ -85,3 +85,5 @@ function BoardPreview() {
     </div>
   );
 }
+
+export default BoardPreview;
