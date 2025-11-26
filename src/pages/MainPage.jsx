@@ -10,6 +10,8 @@ import Middle from "@components/common/middle/Middle";
 import BoardPreview from "@components/board/BoardPreview"; // BoardPreview 경로 확인 필요
 import ShareSNS from "@components/common/ShareSNS/ShareSNS";
 import { Map, MapMarker } from "react-kakao-maps-sdk";
+import QnaPreview from "@components/board/QnaPreview";
+
 import {
   ScanSearch,
   Printer,
@@ -24,6 +26,7 @@ import {
   Leaf,
   Footprints,
   MapPin,
+  HelpCircle,
 } from "lucide-react";
 
 function MainPage() {
@@ -198,42 +201,23 @@ function MainPage() {
                 </div>
               </Card>
 
-              {/* 4. 게시판 / 이벤트 */}
+              {/* 4. 게시판 */}
               <Card
                 title={
                   <div className="flex items-center gap-2">
                     <Megaphone className="w-5 h-5 text-orange-500" />
-                    <span>게시판 / 이벤트</span>
+                    <span>전체 게시판</span>
                   </div>
                 }
-                className="cursor-pointer hover:border-orange-200 hover:shadow-md transition-all group relative overflow-hidden"
-                onClick={() => {
-                  navigate(routes.about);
-                }}
+                className="cursor-pointer hover:border-orange-200 hover:shadow-md transition-all group relative overflow-hidden h-auto"
+                onClick={() => navigate(routes.board || "/board")}
               >
                 <div className="relative z-10">
-                  <ul className="space-y-3 list-none text-sm">
-                    <li className="flex items-center gap-2 text-gray-700">
-                      <span className="w-1.5 h-1.5 bg-orange-400 rounded-full"></span>
-                      <a href="#" className="hover:underline truncate">
-                        [10.15] 한국 휴가 캠페인 시작
-                      </a>
-                    </li>
-                    <li className="flex items-center gap-2 text-gray-700">
-                      <span className="w-1.5 h-1.5 bg-gray-300 rounded-full"></span>
-                      <a href="#" className="hover:underline truncate">
-                        [09.25] 교육 자료 업로드 안내
-                      </a>
-                    </li>
-                  </ul>
-                  <div className="mt-4 text-right">
-                    <span className="text-xs text-orange-500 font-bold group-hover:mr-1 transition-all">
-                      더보기 +
-                    </span>
-                  </div>
+                  <BoardPreview isMain={true} />
                 </div>
-                <div className="absolute -right-6 -bottom-6 opacity-5 group-hover:opacity-10 group-hover:rotate-12 transition-all duration-500">
-                  <Calendar size={130} className="text-orange-500" />
+                {/* 배경 아이콘 효과 */}
+                <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 group-hover:scale-110 transition-all duration-500">
+                  <Megaphone size={120} className="text-orange-600" />
                 </div>
               </Card>
 
@@ -271,32 +255,23 @@ function MainPage() {
                 </div>
               </Card>
 
-              {/* 6. 참여방법 */}
+              {/* 6. 자주 묻는 질문 (Q&A) */}
               <Card
                 title={
                   <div className="flex items-center gap-2">
-                    <Footprints className="w-5 h-5 text-slate-600" />
-                    <span>참여방법</span>
+                    <HelpCircle className="w-5 h-5 text-teal-500" />
+                    <span>자주 묻는 질문 (Q&A)</span>
                   </div>
                 }
-                className="hover:border-slate-300 hover:shadow-md transition-all group relative overflow-hidden"
+                className="cursor-pointer hover:border-teal-200 hover:shadow-md transition-all group relative overflow-hidden h-auto"
+                onClick={() => navigate(routes.faq || "/faq")}
               >
-                <div className="relative z-10 text-sm text-gray-700 space-y-2">
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-slate-800">1.</span>
-                    <span>주소로 주변 수거함 찾기</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-slate-800">2.</span>
-                    <span>약품 분류 확인 (알약/물약 등)</span>
-                  </p>
-                  <p className="flex items-start gap-2">
-                    <span className="font-bold text-slate-800">3.</span>
-                    <span>가까운 수거함에 배출하기</span>
-                  </p>
+                <div className="relative z-10">
+                  <QnaPreview />
                 </div>
-                <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 group-hover:scale-105 transition-all duration-500">
-                  <MapPin size={120} className="text-slate-600" />
+                {/* 배경 아이콘 효과 */}
+                <div className="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 group-hover:scale-110 transition-all duration-500">
+                  <HelpCircle size={120} className="text-teal-600" />
                 </div>
               </Card>
             </section>

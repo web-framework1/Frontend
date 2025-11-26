@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { allPosts } from "../../mock/postsData";
+import { allQaItems as faqData } from "../../mock/faqData";
 
 const ListIcon = () => (
   <svg
@@ -24,7 +24,7 @@ const ListIcon = () => (
   </svg>
 );
 
-const ListButton = ({ to = "/board" }) => (
+const ListButton = ({ to = "/faq" }) => (
   <Link
     to={to}
     className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-green-700 bg-green-100 rounded-full hover:bg-green-200 transition-colors"
@@ -34,56 +34,46 @@ const ListButton = ({ to = "/board" }) => (
   </Link>
 );
 
-const BoardItem = ({ tag, tagColor, title, description, link = "#" }) => (
+const QaItem = ({ question, answer, link = "#" }) => (
   <Link
     to={link}
     className="block w-full p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-50 transition-colors"
   >
-    <div className="flex items-center gap-2 mb-1">
-      {tag && (
-        <span
-          className={`text-xs font-bold px-2 py-0.5 rounded-full ${tagColor}`}
-        >
-          {tag}
-        </span>
-      )}
-      <h4 className="font-semibold text-gray-800 truncate">{title}</h4>
+    <div className="mb-1">
+      <span className="font-bold text-blue-600">Q: </span>
+      <span className="font-semibold text-gray-800">{question}</span>
     </div>
     <div>
-      <p className="text-sm text-gray-600 truncate">{description}</p>
+      <span className="font-bold text-gray-600">A: </span>
+      <span className="text-sm text-gray-600">{answer}</span>
     </div>
   </Link>
 );
 
-function BoardPreview() {
-  const recentPosts = (allPosts || [])
-    .filter((item) => item.type === "post")
-    .slice(0, 1)
-    .map((post) => ({
-      ...post,
-      link: "/board",
-    }));
+function QnaPreview() {
+  const recentFaqs = (faqData || []).slice(0, 1).map((faq) => ({
+    ...faq,
+    link: "/faq",
+  }));
 
   return (
     <div className="w-full">
       <div className="space-y-3">
-        {recentPosts.length > 0 ? (
-          recentPosts.map((item, index) => (
-            <BoardItem
+        {recentFaqs.length > 0 ? (
+          recentFaqs.map((item, index) => (
+            <QaItem
               key={index}
-              tag={item.tag}
-              tagColor={item.tagColor}
-              title={item.title}
-              description={item.description}
+              question={item.question}
+              answer={item.answer}
               link={item.link}
             />
           ))
         ) : (
-          <p className="text-gray-500 text-sm p-2">등록된 게시글이 없습니다.</p>
+          <p className="text-gray-500 text-sm p-2">등록된 질문이 없습니다.</p>
         )}
       </div>
     </div>
   );
 }
 
-export default BoardPreview;
+export default QnaPreview;
