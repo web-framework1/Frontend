@@ -29,7 +29,7 @@ import {
 function MainPage() {
   const navigate = useNavigate();
 
-  const defaultCenter = { lat: 37.566826, lng: 126.9786567 };
+  const defaultCenter = { lat: 37.582402, lng: 127.010229 };
 
   return (
     <>
