@@ -1,161 +1,226 @@
-import React from "react";
-import { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import Logo from "@components/common/bar/logo";
+import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
+import { NavigationBar } from "@components/common/bar/navigation-bar";
 import SearchInput from "@components/common/input/search-input";
 import CustomButton from "@components/common/button/custom-button";
 import Footer from "@components/common/footer/footer";
-
-// 메뉴바
-const NavigationItem = ({ text, url }) => {
-  return (
-    <Link
-      to={url}
-      className="
-      font-semibold text-gray-700 hover:text-green-700 
-      px-3 py-auto rounded-lg hover:bg-green-200 transition-colors
-      "
-    >
-      {text}
-    </Link>
-  );
-};
-
-const MapPageHeader = () => {
-  const navigate = useNavigate();
-
-  return (
-    <div className="w-full flex items-center justify-between px-6 py-3">
-      <Logo />
-      <div className="flex items-center gap-5">
-        <nav>
-          <ul className="flex gap-5 list-none items-center">
-            <li>
-              <NavigationItem text="지도" url="/map" />
-            </li>
-            <li>
-              <NavigationItem text="안심 봉투" url="/printer" />
-            </li>
-            <li>
-              <NavigationItem text="AI약품검색" url="/searchAi" />
-            </li>
-            <li>
-              <NavigationItem text="퀴즈" url="/quiz" />
-            </li>
-            <li>
-              <NavigationItem text="게시판" url="/board" />
-            </li>
-          </ul>
-        </nav>
-        <CustomButton
-          type="button"
-          color="gradient"
-          onClick={() => {
-            navigate("/map");
-          }}
-        >
-          내 주변 수거함 찾기
-        </CustomButton>
-      </div>
-    </div>
-  );
-};
-
-// 지도 페이지
+import KakaoMap from "@components/map/KakaoMap";
+import { CircleHelp, Map as MapIcon } from "lucide-react";
 
 function MapPage() {
   const location = useLocation();
-  // main페이지에서 입력한 검색 쿼리가 있을 경우 받아옴
   const locationQuery = location.state?.locationQuery || "";
 
   const [query, setQuery] = useState(locationQuery);
   const [results, setResults] = useState([]);
+  const [filter, setFilter] = useState("전체");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [searchTrigger, setSearchTrigger] = useState({
+    keyword: locationQuery ? locationQuery + " 약국" : "",
+    filter: "전체",
+    timestamp: Date.now(),
+  });
 
   const handleSearch = () => {
-    console.log("검색어:", query);
-    setResults([
-      {
-        id: 1,
-        name: "행복약국",
-        address: "서울 강남구 역삼동 123",
-        hours: "09:00-18:00",
-      },
-      {
-        id: 2,
-        name: "강남보건소",
-        address: "서울 강남구 논현동 456",
-        hours: "09:00-17:00",
-      },
-    ]);
+    if (!query.trim()) {
+      alert("검색어를 입력해주세요.");
+      return;
+    }
+    setIsLoading(true);
+
+    let searchKeyword = query.trim();
+
+    if (filter === "약국") {
+      searchKeyword += " 약국";
+    } else if (filter === "보건소") {
+      searchKeyword += " 보건소";
+    } else if (filter === "수거함") {
+      searchKeyword = query.trim();
+    } else {
+      searchKeyword += " 약국";
+    }
+
+    setSearchTrigger({
+      keyword: searchKeyword,
+      filter: filter,
+      timestamp: Date.now(),
+    });
+  };
+
+  const handleCurrentLocationSearch = () => {
+    if (navigator.geolocation) {
+      setIsLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lat = position.coords.latitude;
+          const lng = position.coords.longitude;
+          alert(
+            `현재 위치(위도: ${lat.toFixed(4)}, 경도: ${lng.toFixed(
+              4
+            )}) 주변을 검색합니다.`
+          );
+
+          let locationKeyword = "내 위치";
+          if (filter === "약국") locationKeyword += " 약국";
+          else if (filter === "보건소") locationKeyword += " 보건소";
+
+          setQuery("현재 위치");
+          setSearchTrigger({
+            keyword: locationKeyword,
+            filter: filter,
+            timestamp: Date.now(),
+          });
+        },
+        (error) => {
+          console.error("Geolocation Error:", error);
+          alert(
+            "위치 정보를 가져오는 데 실패했습니다. 브라우저 권한을 확인해주세요."
+          );
+          setIsLoading(false);
+        }
+      );
+    } else {
+      alert("이 브라우저에서는 위치 정보를 지원하지 않습니다.");
+    }
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col h-screen bg-green-50">
       <header className="sticky top-0 z-30 backdrop-blur-sm bg-white/90 border-b border-black/5">
-        <MapPageHeader />
+        <NavigationBar />
       </header>
 
-      <main className="flex-grow flex">
-        <aside className="w-96 border-r border-gray-200 bg-white p-6 flex flex-col">
-          <h2 className="text-xl font-bold mb-4">수거함 위치 검색</h2>
+      <main className="flex-grow flex w-full max-w-7xl mx-auto px-6 py-0 min-h-0">
+        <div className="flex w-full h-full border-x border-gray-200 bg-white shadow-sm">
+          {/* 왼쪽 사이드바 */}
+          <aside className="w-96 border-r border-gray-200 flex flex-col z-10">
+            <div className="p-5 border-b border-gray-100">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                  <MapIcon className="w-5 h-5 text-green-600" />
+                  수거함 위치 검색
+                </h2>
+                <button
+                  className="text-gray-400 hover:text-green-600 transition-colors"
+                  onClick={() =>
+                    alert(
+                      "주소를 입력하거나 '내 위치' 버튼을 눌러 주변 수거함을 찾아보세요."
+                    )
+                  }
+                  title="도움말"
+                >
+                  <CircleHelp className="w-5 h-5" />
+                </button>
+              </div>
 
-          <div className="flex flex-col gap-3">
-            <SearchInput
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onSearch={handleSearch}
-              placeholder="예) 강남구 역삼동"
-            />
+              <div className="flex flex-col gap-3">
+                <SearchInput
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  onSearch={handleSearch}
+                  placeholder="예) 강남구 역삼동"
+                />
 
-            <div className="flex gap-2">
-              <select className="flex-1 border border-gray-300 rounded-lg h-10 px-3 text-sm focus:outline-none focus:border-blue-500">
-                <option>전체</option>
-                <option>약국</option>
-                <option>보건소</option>
-              </select>
-              <select className="flex-1 border border-gray-300 rounded-lg h-10 px-3 text-sm focus:outline-none focus:border-blue-500">
-                <option>운영시간 전체</option>
-                <option>운영중</option>
-              </select>
-              <CustomButton color="gray" onClick={() => alert("내 위치")}>
-                내 위치
-              </CustomButton>
-            </div>
-
-            <CustomButton color="gradient" onClick={handleSearch}>
-              가까운 수거함 찾기
-            </CustomButton>
-          </div>
-
-          <div className="flex-grow overflow-y-auto mt-6 space-y-4">
-            {results.map((item) => (
-              <div
-                key={item.id}
-                className="border rounded-lg p-4 hover:bg-gray-50"
-              >
-                <h3 className="font-bold text-lg text-green-700">
-                  {item.name}
-                </h3>
-                <p className="text-sm text-gray-700">{item.address}</p>
-                <p className="text-xs text-gray-500 mt-1">{item.hours}</p>
-                <div className="mt-3">
-                  <CustomButton
-                    color="blue"
-                    onClick={() => alert(`${item.name} 길찾기`)}
+                <div className="flex gap-2">
+                  <select
+                    className="flex-1 border border-gray-300 rounded-lg h-9 px-2 text-sm focus:outline-none focus:border-green-500"
+                    value={filter}
+                    onChange={(e) => setFilter(e.target.value)}
                   >
-                    길찾기
+                    <option value="전체">전체</option>
+                    <option value="약국">약국</option>
+                    <option value="보건소">보건소</option>
+                    <option value="수거함">수거함(공공)</option>
+                  </select>
+                  <select className="flex-1 border border-gray-300 rounded-lg h-9 px-2 text-sm focus:outline-none focus:border-green-500">
+                    <option>운영시간 전체</option>
+                    <option>운영중</option>
+                  </select>
+                  <CustomButton
+                    color="gray"
+                    onClick={handleCurrentLocationSearch}
+                  >
+                    내 위치
                   </CustomButton>
                 </div>
-              </div>
-            ))}
-          </div>
-        </aside>
 
-        <section className="flex-grow bg-gray-200">
-          <div className="w-full h-full flex items-center justify-center text-gray-500">
-            지도 표시 영역
-          </div>
-        </section>
+                <CustomButton
+                  color="gradient"
+                  onClick={handleSearch}
+                  disabled={isLoading}
+                >
+                  {isLoading ? "검색 중..." : "가까운 수거함 찾기"}
+                </CustomButton>
+              </div>
+            </div>
+
+            {/* 결과 목록 영역 */}
+            <div className="flex-grow overflow-y-auto p-0 bg-white">
+              <p className="text-xs font-semibold text-gray-500 px-5 py-3 bg-gray-50 border-b border-gray-100">
+                {searchTrigger.keyword
+                  ? `"${searchTrigger.keyword}" 검색 결과: ${
+                      isLoading ? "..." : results.length + "개"
+                    }`
+                  : "지역을 검색해주세요."}
+              </p>
+
+              {isLoading ? (
+                <div className="h-full flex flex-col items-center justify-center text-gray-400 text-sm">
+                  <p>검색 중입니다...</p>
+                </div>
+              ) : results.length > 0 ? (
+                <div className="divide-y divide-gray-100">
+                  {results.map((item, index) => (
+                    <div
+                      key={item.id || index}
+                      className="p-5 hover:bg-green-50 transition-colors cursor-pointer"
+                    >
+                      <h3 className="font-bold text-base text-green-700 mb-1">
+                        {item.place_name}
+                      </h3>
+                      <p className="text-sm text-gray-600">
+                        {item.road_address_name || item.address_name}
+                      </p>
+                      <p className="text-xs text-gray-400 mt-2 flex items-center gap-1">
+                        📞 {item.phone || "전화번호 정보 없음"}
+                      </p>
+                      <div className="mt-3 flex justify-end">
+                        <CustomButton
+                          color="blue"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            window.open(
+                              `https://map.kakao.com/link/to/${item.place_name},${item.y},${item.x}`,
+                              "_blank"
+                            );
+                          }}
+                        >
+                          길찾기
+                        </CustomButton>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                searchTrigger.keyword && (
+                  <div className="h-full flex flex-col items-center justify-center text-gray-400 text-sm">
+                    <p>검색 결과가 없습니다.</p>
+                  </div>
+                )
+              )}
+            </div>
+          </aside>
+
+          {/* 오른쪽 지도 영역 */}
+          <section className="flex-grow bg-gray-100 relative">
+            <KakaoMap
+              searchTrigger={searchTrigger}
+              setResults={setResults}
+              setIsLoading={setIsLoading}
+            />
+          </section>
+        </div>
       </main>
 
       <Footer />
