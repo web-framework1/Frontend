@@ -20,13 +20,11 @@
 
 ## 설치 및 실행 방법
 
-이 프로젝트는 **Frontend(React)**와 **Backend(Flask)** 서버를 각각 실행해야 합니다.
+이 프로젝트는 **Frontend**와 **Backend** 서버를 각각 실행해야 합니다.
 
 ### 1. 사전 준비 (Prerequisites)
 * [Node.js](https://nodejs.org/)
 * [Python](https://www.python.org/)
-* **Kakao Maps API Key**
-* **Google Gemini API Key**
 
 ### 2. Backend 실행
 ```bash
