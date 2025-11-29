@@ -93,12 +93,12 @@ npm run dev
 
 ## 기술 스택 (Tech Stack)
 
-### 1. Language: JavaScript (ES6+)
-### 2. Framework/Library: React (Vite), Flask
-### 3. Routing: React Router DOM v6
-### 4. Map: React Kakao Maps SDK
-### 5. Icons: Lucide React
-### 6. HTTP Client: Axios 
+##### 1. Language: JavaScript (ES6+)
+##### 2. Framework/Library: React (Vite), Flask
+##### 3. Routing: React Router DOM v6
+##### 4. Map: React Kakao Maps SDK
+##### 5. Icons: Lucide React
+##### 6. HTTP Client: Axios 
 
 ---
 
@@ -184,6 +184,7 @@ medicine-campaign/
         ├── App.jsx
         ├── main.jsx  
         └── global.css
+```
 
 ## Contributors
 * **Team**: 한성대학교 IT공과대학 컴퓨터공학부 웹프래임워크1 5팀
