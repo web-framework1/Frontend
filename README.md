@@ -32,10 +32,8 @@
 python -m venv venv
 
 # 2. 가상환경 실행
-# Windows:
-.\venv\Scripts\activate
-# Mac/Linux: 
-# source venv/bin/activate
+# Windows: .\venv\Scripts\activate
+# Mac/Linux: source venv/bin/activate
 
 # 3. 필수 라이브러리 설치
 pip install -r requirements.txt
