@@ -102,13 +102,13 @@ export default function QuizPage() {
           }
 
           // 서버로 데이터 전송
-          // 2. 유저 이름과 점수를 서버로 전송하고, 업데이트된 값 받아오기 (POST)
+          // 유저 이름과 점수를 서버로 전송하고, 업데이트된 값 받아오기 (POST)
           updateRankings(userName);
         } else {
           alert(rankingMessage + "\n아쉽지만 5위권 밖입니다.");
         }
 
-        // 2. 유저 이름과 점수를 서버로 전송, 업데이트된 값 받아오기
+        // 유저 이름과 점수를 서버로 전송, 업데이트된 값 받아오기
       } else {
         setCurrentQuizIndex((prevIndex) => prevIndex + 1);
         setSelectedOption(null);
@@ -151,7 +151,6 @@ export default function QuizPage() {
           />
           {/* 2. 랭킹 사이드바 UI */}
           <RankingSidebar rankers={renkers} />{" "}
-          {/* 이 컴포넌트는 별도로 구현 필요 */}
         </div>
       </main>
 

@@ -1,6 +1,5 @@
-// src/pages/HomePage.jsx (테스트 예시)
 import React, { useState } from "react";
-import Checkbox from "../components/Checkbox.jsx"; // 체크박스 컴포넌트 가져오기
+import Checkbox from "../components/Checkbox.jsx";
 
 const HomePage = () => {
   // 체크박스의 상태를 관리하기 위한 state

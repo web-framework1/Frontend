@@ -1,12 +1,7 @@
-// src/components/quiz/RankingSidebar.jsx
-
 import React from "react";
-
-// 랭킹 목업 데이터 (실제 백엔드 연동 시 이 부분을 props나 fetch 로직으로 대체해야 합니다.)
 
 export default function RankingSidebar({ rankers }) {
   return (
-    // 두 번째 이미지의 랭킹 프레임 스타일을 적용합니다.
     <div className="w-1/3 max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow-md hidden md:block">
       {/* 제목 */}
       <h3 className="text-lg font-bold text-center mb-4">

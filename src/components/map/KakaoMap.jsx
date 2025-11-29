@@ -31,7 +31,7 @@ const KakaoMap = ({ searchTrigger, setResults, setIsLoading }) => {
         return response.json();
       })
       .then((jsonData) => {
-        // 핵심 수정: jsonData.records 배열을 사용
+        // jsonData.records 배열을 사용
         // 만약 records가 없다면 jsonData 자체가 배열인지 확인하여 처리
         const records =
           jsonData.records || (Array.isArray(jsonData) ? jsonData : []);

@@ -39,7 +39,7 @@ export default function QuizCard({
           let optionClass = "p-3 border rounded-lg transition duration-150";
 
           if (showAnswer) {
-            // 🚨 정답이거나 오답일 경우 스타일 적용 (답변 확인 후)
+            // 정답이거나 오답일 경우 스타일 적용 (답변 확인 후)
             if (optionIndex === currentQuiz.answer) {
               // 정답 녹색
               optionClass +=

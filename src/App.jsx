@@ -9,8 +9,8 @@ import PrinterPage from "@pages/PrinterPage";
 import Quiz from "@pages/QuizPage";
 import BoardPage from "@pages/BoardPage";
 import FaqPage from "@pages/FaqPage";
-import BoardDetailPage from "./pages/BoardDetailPage"; // 일반 게시글 상세 (새로 만듦)
-import FaqDetailPage from "./pages/FaqDetailPage"; // Q&A 상세 (새로 만듦)
+import BoardDetailPage from "./pages/BoardDetailPage";
+import FaqDetailPage from "./pages/FaqDetailPage";
 
 function App() {
   return (

@@ -1,9 +1,6 @@
 import React from "react";
 
 // 버튼 컴포넌트
-// props (텍스트, 이벤트함수, 타입, 백컬러)
-
-//테일윈드의 단점인듯 재사용시 ui변경 좀 어렵네
 const COLORS = {
   green: "bg-green-700 hover:bg-green-800",
   blue: "bg-blue-700 hover:bg-blue-800",
