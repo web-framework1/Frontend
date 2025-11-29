@@ -46,8 +46,8 @@ python -m venv venv
 pip install -r requirements.txt
 
 # 5. 환경 변수 설정 (.env 파일 생성)
-# 폴더 루트에 .env 파일을 만들고 아래 내용을 입력하세요.
-# GEN_API_KEY="발급받은_GOOGLE_GEMINI_API_KEY"
+- 폴더 루트에 .env 파일을 만들고 아래 내용을 입력하세요.
+- GEN_API_KEY="발급받은_GOOGLE_GEMINI_API_KEY"
 
 # 6. 서버 실행
 python run.py
