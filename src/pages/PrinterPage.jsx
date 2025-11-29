@@ -6,7 +6,7 @@ import Checkbox from "@components/common/checkbox/Checkbox";
 import envelopeImg from "@assets/envelope.jpg";
 import { useReactToPrint } from "react-to-print"; //프린터 라이브러리
 
-export default function PrinterPage({ imgSrc = envelopeImg, featNum = 3 }) {
+export default function PrinterPage({ imgSrc = envelopeImg }) {
   // 주의사항
   const items = useMemo(
     () => [
@@ -56,11 +56,8 @@ export default function PrinterPage({ imgSrc = envelopeImg, featNum = 3 }) {
       {/* 본문 */}
       <main className="mx-auto max-w-5xl px-4 py-6">
         <div className="mb-4 flex items-center gap-2">
-          <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-emerald-700 text-sm font-semibold">
-            {featNum}
-          </span>
           <h2 className="text-lg font-bold text-gray-900">
-            페의약품 안심봉투 출력
+            폐의약품 안심봉투 출력
           </h2>
         </div>
 

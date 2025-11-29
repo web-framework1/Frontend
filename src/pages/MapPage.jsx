@@ -150,7 +150,7 @@ function MapPage() {
                   onClick={handleSearch}
                   disabled={isLoading}
                 >
-                  {isLoading ? "검색 중..." : "가까운 수거함 찾기"}
+                  {isLoading ? "검색 중..." : "입력한 위치 수거함 찾기"}
                 </CustomButton>
               </div>
             </div>

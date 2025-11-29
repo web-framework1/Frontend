@@ -5,10 +5,7 @@ import { Share2, MessageCircle, Send, Twitter } from "lucide-react";
 export default function ShareSNS({ children }) {
   // SNS 공유 함수들
   const shareToKakao = () => {
-    const url = window.location.href;
-    alert(
-      "카카오톡 공유 기능은 카카오 API 키 설정이 필요합니다.\n공유 URL: " + url
-    );
+    window.open(`https://www.kakaocorp.com/page/`, "_blank");
   };
 
   const shareToTwitter = () => {
@@ -34,10 +31,7 @@ export default function ShareSNS({ children }) {
   };
 
   const shareToInstagram = () => {
-    alert(
-      "인스타그램은 직접 공유 링크를 지원하지 않습니다.\n링크를 복사하여 스토리나 게시물에 추가해주세요!"
-    );
-    navigator.clipboard.writeText(window.location.href);
+    window.open(`https://www.instagram.com`, "_blank");
   };
 
   const copyLink = () => {
