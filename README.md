@@ -30,26 +30,19 @@
 
 ### 2. Backend 실행
 ```bash
-# 1. 백엔드 폴더로 이동
-cd medicine-campaign-backend
-
-# 2. 가상환경 생성 (최초 1회)
+# 1. 가상환경 생성 (최초 1회)
 python -m venv venv
 
-# 3. 가상환경 실행
+# 2. 가상환경 실행
 # Windows:
 .\venv\Scripts\activate
 # Mac/Linux: 
 # source venv/bin/activate
 
-# 4. 필수 라이브러리 설치
+# 3. 필수 라이브러리 설치
 pip install -r requirements.txt
 
-# 5. 환경 변수 설정 (.env 파일 생성)
-- 폴더 루트에 .env 파일을 만들고 아래 내용을 입력하세요.
-- GEN_API_KEY="발급받은_GOOGLE_GEMINI_API_KEY"
-
-# 6. 서버 실행
+# 4. 서버 실행
 python run.py
 ```
 
@@ -61,11 +54,7 @@ cd medicine-campaign-frontend
 # 2. 의존성 패키지 설치
 npm install
 
-# 3. 카카오맵 API 설정
-- public/index.html 파일의 <script> 태그에 본인의 Kakao JavaScript Key 입력
-- <script src="//[dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_KEY](https://dapi.kakao.com/v2/maps/sdk.js?appkey=YOUR_KAKAO_KEY)"></script>
-
-# 4. 개발 서버 실행
+# 3. 개발 서버 실행
 npm run dev
 ```
 
