@@ -32,8 +32,8 @@
 python -m venv venv
 
 # 2. 가상환경 실행
-# Windows: .\venv\Scripts\activate
-# Mac/Linux: source venv/bin/activate
+- Windows: .\venv\Scripts\activate
+- Mac/Linux: source venv/bin/activate
 
 # 3. 필수 라이브러리 설치
 pip install -r requirements.txt
@@ -44,13 +44,11 @@ python run.py
 
 ### 3. Frontend 실행
 ```bash
-# 1. 프론트엔드 폴더로 이동
-cd medicine-campaign-frontend
 
-# 2. 의존성 패키지 설치
+# 1. 의존성 패키지 설치
 npm install
 
-# 3. 개발 서버 실행
+# 2. 개발 서버 실행
 npm run dev
 ```
 
