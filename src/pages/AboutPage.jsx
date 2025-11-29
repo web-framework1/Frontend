@@ -15,10 +15,6 @@ const HomePage = () => {
     <div className="p-10">
       <h1 className="mb-4 text-2xl font-bold">체크박스 테스트</h1>
 
-      {/* ✅ 여기에 팀원의 요구사항이 반영되었습니다!
-        '호출'할 때 "개인정보 수집에 동의합니다"라는 텍스트 값을 `label` prop으로 주면,
-        Checkbox 컴포넌트가 이 값을 받아서 내용(텍스트)을 입력(표시)해 줍니다.
-      */}
       <Checkbox
         label="개인정보 수집에 동의합니다"
         checked={isChecked}

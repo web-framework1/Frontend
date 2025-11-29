@@ -12,7 +12,7 @@ const KakaoMap = ({ searchTrigger, setResults, setIsLoading }) => {
 
   // 1. JSON 데이터 로드 (구조: { fields: [], records: [] })
   useEffect(() => {
-    console.log("📥 수거함 데이터 로딩 시작...");
+    console.log(" 수거함 데이터 로딩 시작...");
 
     fetch("/data/pharmacies.json") // public/data/pharmacies.json 경로
       .then((response) => {
@@ -31,14 +31,14 @@ const KakaoMap = ({ searchTrigger, setResults, setIsLoading }) => {
         return response.json();
       })
       .then((jsonData) => {
-        // 🟢 핵심 수정: jsonData.records 배열을 사용
+        // 핵심 수정: jsonData.records 배열을 사용
         // 만약 records가 없다면 jsonData 자체가 배열인지 확인하여 처리
         const records =
           jsonData.records || (Array.isArray(jsonData) ? jsonData : []);
 
         if (records.length === 0) {
           console.warn(
-            "⚠️ 데이터가 비어있거나 records 키를 찾을 수 없습니다.",
+            " 데이터가 비어있거나 records 키를 찾을 수 없습니다.",
             jsonData
           );
         }
@@ -56,11 +56,11 @@ const KakaoMap = ({ searchTrigger, setResults, setIsLoading }) => {
           is_db_data: true,
         }));
 
-        console.log(`✅ 수거함 데이터 ${formattedData.length}개 로드 완료`);
+        console.log(` 수거함 데이터 ${formattedData.length}개 로드 완료`);
         setPharmacyData(formattedData);
       })
       .catch((error) => {
-        console.error("❌ 수거함 데이터 로드 실패:", error);
+        console.error(" 수거함 데이터 로드 실패:", error);
         // 데이터 로드 실패해도 앱이 죽지 않도록 빈 배열 설정
         setPharmacyData([]);
       });
@@ -103,7 +103,7 @@ const KakaoMap = ({ searchTrigger, setResults, setIsLoading }) => {
     // "내 위치"로 시작하면 전체 데이터 대상, 아니면 첫 단어(지역명)로 필터링
     const regionTerm = searchTerms[0] === "내" ? "전체" : searchTerms[0];
 
-    // 🟢 수거함 데이터 필터링
+    // 수거함 데이터 필터링
     const filteredMockData = pharmacyData.filter((item) => {
       const addr = item.road_address_name || "";
       const name = item.place_name || "";
@@ -121,7 +121,7 @@ const KakaoMap = ({ searchTrigger, setResults, setIsLoading }) => {
       return false;
     });
 
-    // 🟢 "수거함" 필터일 경우: 카카오 API 호출 없이 JSON 데이터만 표시
+    // "수거함" 필터일 경우: 카카오 API 호출 없이 JSON 데이터만 표시
     if (filter === "수거함") {
       handleSearchResult(
         filteredMockData,
