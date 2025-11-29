@@ -1,16 +1,57 @@
-# React + Vite
+# 약모아
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+> **폐약품을 정리하는 서비스**
 
-Currently, two official plugins are available:
+**약모아**는 서비스입니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 📱 프로젝트 소개
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **프로젝트명**: 약모아
+- **개발 환경**: vscode (react)
+- **대상 사용자**: 
+- **핵심 가치**: 
+---
 
-## Expanding the ESLint configuration
+## 주요 기능
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 1. 
+### 2. 
+### 3. 
+### 4. 
+### 5. 
+---
+
+## 기술 스택 (Tech Stack)
+
+### 1. 
+### 2. 
+### 3. 
+### 4. 
+### 5. 
+
+---
+
+## 디렉토리 구조 (Directory Structure)
+
+```
+lib/
+├──                   
+├──           
+├──               
+│   ├──
+│   ├── 
+│   └── 
+└──                   
+    ├── 
+    ├── 
+    └── 
+```
+
+## 설치 및 실행 방법 (Installation)
+
+
+## Contributors
+* **Team**: 한성대학교 IT공과대학 컴퓨터공학부 웹프래임워크1 5팀
+* **Developer**: 강승진*(2171386), 박준서(2191214), 이시형 (2071248), 최세익(2191036)
